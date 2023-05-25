@@ -209,14 +209,12 @@ class GeoExtractor:
         Returns:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-
-        crs = self.get_crs()
         root = self.root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection//gml:segments',
                                  namespaces=self.namespaces)
 
         coordinate_string = ''
         for location in root:
-            unpacked_gml = self.unpack_gml(location.getchildren(), crs=crs)
+            unpacked_gml = self.unpack_gml(location.getchildren())
             coordinate_string += unpacked_gml
 
         geo_dict = {
@@ -261,15 +259,16 @@ class GeoExtractor:
         coordinate_string = ''
         root = self.root.findall('.//aixm:curveExtent//gml:segments', namespaces=self.namespaces)
         for location in root:
-            coordinate_string += self.unpack_gml(location.getchildren())
+            next_coordinate = self.unpack_gml(location.getchildren())
+            coordinate_string += next_coordinate
 
         geo_dict = {
-            'coordinate_string': coordinate_string
+            'coordinates': coordinate_string
         }
 
         return geo_dict
 
-    def unpack_gml(self, location: etree.Element, **kwargs: str) -> str:
+    def unpack_gml(self, location: etree.Element) -> str:
         """
         Args:
             location(etree.Element): etree.Element containing specific aixm tags containing geographic information
@@ -277,24 +276,26 @@ class GeoExtractor:
         Returns:
             coordinate_string(str): A coordinate string
         """
-        crs = kwargs.pop('crs', None)
         coordinate_list = []
         for child in location:
             tag = child.tag.split('}')[-1]
             if tag == 'CircleByCenterPoint':
-                coordinate_list.append(self.unpack_circle(child))
+                next_coordinate = self.unpack_circle(child)
+                coordinate_list.append(next_coordinate)
             elif tag == 'GeodesicString' or tag == 'LineStringSegment':
                 points = child.findall('.//gml:pointProperty', namespaces=self.namespaces)
                 for point in points:
-                    coordinate_list.append(self.unpack_geodesic_string(point))
+                    next_coordinate = self.unpack_geodesic_string(point)
+                    coordinate_list.append(next_coordinate)
             elif tag == 'ArcByCenterPoint':
-                coordinate_list.append(self.unpack_arc(child, crs))
+                next_coordinate = self.unpack_arc(child)
+                coordinate_list.append(next_coordinate)
 
-            coordinate_string = ', '.join(coordinate_list)
+        coordinate_string = ', '.join(coordinate_list)
 
         return coordinate_string
 
-    def unpack_arc(self, location: etree.Element, crs: str) -> str:
+    def unpack_arc(self, location: etree.Element) -> str:
         """
         Args:
             location(etree.Element): etree.Element containing specific aixm tags containing geographic information
@@ -308,7 +309,6 @@ class GeoExtractor:
         # Pyproj uses metres, we will have to convert for distance
         radius = self.get_first_value('.//gml:radius', subtree=location)
         radius_uom = self.get_first_value_attribute('.//gml:radius', subtree=location, attribute_string='uom')
-        crs = crs
 
         conversion_dict = {'FT': 0.3048, '[nmi_i]': 1852, 'MI': 1609.4, 'KM': 1000}
 
@@ -323,11 +323,11 @@ class GeoExtractor:
 
         coordinate_string = f'start={round(start_coord[1], 5)} {round(start_coord[0], 5)},' \
                             f' end={round(end_coord[1], 5)} {round(end_coord[0], 5)}, centre={centre},' \
-                            f' direction={self.determine_arc_direction(float(start_angle), float(end_angle), crs)}'
+                            f' direction={self.determine_arc_direction(float(start_angle), float(end_angle))}'
 
         return coordinate_string
 
-    def determine_arc_direction(self, start_angle: float, end_angle: float, crs: str) -> str:
+    def determine_arc_direction(self, start_angle: float, end_angle: float) -> str:
         """
         Args:
             start_angle(float): Start angle of the arc from it's centre point.
@@ -336,6 +336,7 @@ class GeoExtractor:
         Returns:
             direction(str): Clockwise or Anticlockwise
         """
+        crs = self.get_crs()
         if crs == '4326':
             if start_angle < end_angle:
                 direction = 'clockwise'
