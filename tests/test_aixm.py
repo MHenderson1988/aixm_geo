@@ -1,5 +1,5 @@
 from unittest import TestCase
-from aixm_geo.aixm import Aixm, GeoExtractor
+from aixm_geo.aixm_geo import AixmGeo, GeoExtractor
 from pathlib import Path
 from lxml import etree
 
@@ -7,7 +7,7 @@ from lxml import etree
 class TestAixm(TestCase):
     def setUp(self):
         file_loc = Path().absolute().joinpath('..', Path('test_data/test.xml'))
-        self.test_aixm = Aixm(file_loc)
+        self.test_aixm = AixmGeo(file_loc)
 
     def test_find_aixm_features(self):
         list_of_features = self.test_aixm.find_aixm_features()
@@ -19,7 +19,7 @@ class TestAixm(TestCase):
 class TestGeoExtractor(TestCase):
     def setUp(self):
         file_loc = Path().absolute().joinpath('..', Path('test_data/test.xml'))
-        self.a = Aixm(file_loc)
+        self.a = AixmGeo(file_loc)
         # AirportHeliport
         self.ah = GeoExtractor(self.a.find_aixm_features()[0])
         # Navaid

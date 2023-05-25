@@ -5,8 +5,8 @@ from pyproj.geod import Geod
 from pathlib import Path
 
 
-class Aixm:
-    def __init__(self, root):
+class AixmGeo:
+    def __init__(self, root: str):
         self.root = etree.parse(root)
         self.namespaces = {'xlink': "http://www.w3.org/1999/xlink",
                            'gml': "http://www.opengis.net/gml/3.2", 'aixm': "http://www.aixm.aero/schema/5.1",
@@ -14,19 +14,18 @@ class Aixm:
                            'message': "http://www.aixm.aero/schema/5.1/message",
                            'xsi': "http://www.w3.org/2001/XMLSchema-instance"}
 
-    def find_aixm_features(self):
+    def find_aixm_features(self) -> list:
         feature_list = self.root.findall('.//message:hasMember', self.namespaces)
         return feature_list
 
-    def extract_geo_info(self):
+    def extract_geo_info(self) -> list:
         feature_list = self.find_aixm_features()
-        for aixm_feature in feature_list:
-            a = GeoExtractor(aixm_feature).get_geo_info()
-            print(a)
+        geo_info = [GeoExtractor(x).get_geo_info() for x in feature_list]
+        geo_info
 
 
 class GeoExtractor:
-    def __init__(self, root):
+    def __init__(self, root: etree.Element):
         self.root = root
         self.namespaces = {'xlink': "http://www.w3.org/1999/xlink",
                            'gml': "http://www.opengis.net/gml/3.2", 'aixm': "http://www.aixm.aero/schema/5.1",
@@ -63,9 +62,6 @@ class GeoExtractor:
                 x.find('.//{http://www.aixm.aero/schema/5.1}versionBegin').text.split('T')[0],
                 "%Y-%m-%d"))
         return timeslices
-
-    def get_geo_string(self):
-        pass
 
     def get_first_value(self, xpath: str, **kwargs: etree.Element) -> str:
         """Returns the first matching text value found within the subtree which match the Xpath provided.
@@ -116,8 +112,8 @@ class GeoExtractor:
                 subtree (etree.Element):  The subtree to search.  Defaults to self.root if no value provided.
                 attribute_string (str): The attribute to search for.
         Returns:
-            attribute (Union[str, dict]): The string attribute if attribute_string is defined.  If not, returns the
-            full dict.
+            attribute (Union[str, dict]): The string attribute if attribute_string is defined.
+              If not, returns the full dict.
         """
         subtree = kwargs.pop('subtree', self.root)
         attribute_string = kwargs.pop('attribute_string', None)
@@ -137,8 +133,13 @@ class GeoExtractor:
 
         return attribute
 
-    def get_geo_info(self):
-
+    def get_geo_info(self) -> list:
+        """
+        Args:
+            self
+        Returns:
+            geo_info(list): A list of lists containing coordinate strings for intepretation by KmlPlus.
+        """
         func_dict = {'AirportHeliport': self.get_arp_coordinates, 'Navaid': self.get_navaid_coordinates,
                      'Airspace': self.get_airspace_coordinates,
                      'DesignatedPoint': self.get_designated_point_coordinates,
@@ -149,31 +150,58 @@ class GeoExtractor:
         except KeyError:
             geo_info = None
 
-        return geo_info
+        return [geo_info]
 
-    def get_arp_coordinates(self):
+    def get_arp_coordinates(self) -> str:
+        """
+        Args:
+            self
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
         coordinates = self.get_first_value('.//aixm:ARP//gml:pos')
         elevation = self.get_first_value('.//aixm:fieldElevation')
         elevation_uom = self.get_first_value_attribute('.//aixm:fieldElevation', attribute_string='uom')
-        coordinate_string = f'{coordinates} {elevation} {elevation_uom}'
+        name = f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})'
+        coordinate_string = f'{coordinates} {elevation} {elevation_uom}, name={name}'
         return coordinate_string
 
     def get_navaid_coordinates(self):
+        """
+        Args:
+            self
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
         coordinates = self.get_first_value('.//aixm:location//gml:pos')
         elevation = self.get_first_value('.//aixm:location//aixm:elevation')
         elevation_uom = self.get_first_value_attribute('.//aixm:location//aixm:elevation',
                                                        attribute_string='uom')
-        coordinate_string = f'{coordinates} {elevation} {elevation_uom}'
+        name = f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})' \
+               f' {self.get_first_value(".//aixm:type")}'
+        coordinate_string = f'{coordinates} {elevation} {elevation_uom}, name={name}'
 
         return coordinate_string
 
     def get_designated_point_coordinates(self):
+        """
+        Args:
+            self
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
         coordinates = self.get_first_value('.//aixm:location//gml:pos')
         coordinate_string = f'{coordinates}'
 
         return coordinate_string
 
     def get_airspace_coordinates(self):
+        """
+        Args:
+            self
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
         upper_layer = self.get_first_value('.//aixm:theAirspaceVolume//aixm:upperLimit')
         upper_layer_uom = self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:upperLimit',
                                                          attribute_string='uom')
@@ -197,6 +225,13 @@ class GeoExtractor:
         return coordinate_string
 
     def get_crs(self):
+        """
+        Args:
+            self
+        Returns:
+            crs(str): A string of 'Anticlockwise' or 'Clockwise' depending upon the CRS
+            applied and the start and end angles
+        """
         crs = self.get_first_value_attribute('.//aixm:Surface', attribute_string='srsName')
         split = crs.split(':')[-1]
         if split == '4326':
@@ -209,6 +244,12 @@ class GeoExtractor:
         return crs
 
     def get_route_segment_coordinates(self):
+        """
+        Args:
+            self
+        Returns:
+            coordinate_string (str): A coordinate string
+        """
         coordinate_string = ''
         root = self.root.findall('.//aixm:curveExtent//gml:segments', namespaces=self.namespaces)
         for location in root:
@@ -216,7 +257,14 @@ class GeoExtractor:
 
         return coordinate_string
 
-    def unpack_gml(self, location, **kwargs):
+    def unpack_gml(self, location: etree.Element, **kwargs: str) -> str:
+        """
+        Args:
+            location(etree.Element): etree.Element containing specific aixm tags containing geographic information
+            kwargs(str): crs=None the CRS to be used for determining arc directions for ArcByCenterPoint.
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
         crs = kwargs.pop('crs', None)
         coordinate_list = []
         for child in location:
@@ -234,7 +282,14 @@ class GeoExtractor:
 
         return coordinate_string
 
-    def unpack_arc(self, location, crs):
+    def unpack_arc(self, location: etree.Element, crs: str) -> str:
+        """
+        Args:
+            location(etree.Element): etree.Element containing specific aixm tags containing geographic information
+            crs(str): CRS to be used for determining arc directions for ArcByCenterPoint.
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
         centre = self.get_first_value('.//gml:pos', subtree=location)
         start_angle = self.get_first_value('.//gml:startAngle', subtree=location)
         end_angle = self.get_first_value('.//gml:endAngle', subtree=location)
@@ -260,7 +315,15 @@ class GeoExtractor:
 
         return coordinate_string
 
-    def determine_arc_direction(self, start_angle, end_angle, crs):
+    def determine_arc_direction(self, start_angle: float, end_angle: float, crs:str) -> str:
+        """
+        Args:
+            start_angle(float): Start angle of the arc from it's centre point.
+            end_angle(float): End angle of the arc from it's centre point.
+            crs(str): The CRS being used by the AIXM feature.
+        Returns:
+            direction(str): Clockwise or Anticlockwise
+        """
         if crs == '4326':
             if start_angle < end_angle:
                 direction = 'Clockwise'
@@ -276,11 +339,23 @@ class GeoExtractor:
 
         return direction
 
-    def unpack_geodesic_string(self, location):
-        coordinate = self.get_first_value('.//aixm:Point//gml:pos', subtree=location)
-        return coordinate
+    def unpack_geodesic_string(self, location: etree.Element) -> str:
+        """
+        Args:
+            location(etree.Element): etree.Element containing specific aixm tags containing geographic information
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
+        coordinate_string = self.get_first_value('.//aixm:Point//gml:pos', subtree=location)
+        return coordinate_string
 
-    def unpack_circle(self, location):
+    def unpack_circle(self, location: etree.Element) -> str:
+        """
+            Args:
+                location(etree.Element): etree.Element containing specific aixm tags containing geographic information
+            Returns:
+                coordinate_string(str): A coordinate string
+        """
         centre = self.get_first_value('.//gml:pos', subtree=location)
         radius = self.get_first_value('.//gml:radius', subtree=location)
         radius_uom = self.get_first_value_attribute('.//gml:radius', subtree=location, attribute_string='uom')
@@ -292,4 +367,4 @@ class GeoExtractor:
 
 if __name__ == '__main__':
     file_loc = Path().absolute().joinpath('..', Path('test_data/test.xml'))
-    Aixm(file_loc).extract_geo_info()
+    AixmGeo(file_loc).extract_geo_info()
