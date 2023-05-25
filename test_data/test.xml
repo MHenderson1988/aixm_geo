@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<message:AIXMBasicMessage xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:aixm="http://www.aixm.aero/schema/5.1" xmlns:avitech="http://www.aixm.aero/schema/5.1/extensions/Avitech/eSDO" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:nats="http://www.aixm.aero/schema/5.1/extensions/NATS/eSDO" xmlns:message="http://www.aixm.aero/schema/5.1/message" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="id88600" xsi:schemaLocation="http://www.aixm.aero/schema/5.1/message http://www.aixm.aero/schema/5.1/message/AIXM_BasicMessage.xsd">
+	<gml:boundedBy xsi:nil="true"/>
+	<aixm:messageMetadata>
+		<gmd:MD_Metadata>
+			<gmd:contact gco:nilReason="inapplicable" xlink:type="simple"/>
+			<gmd:dateStamp gco:nilReason="inapplicable"/>
+			<gmd:identificationInfo xlink:type="simple">
+				<gmd:MD_DataIdentification>
+					<gmd:citation xlink:type="simple">
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>DSNA Data</gco:CharacterString>
+							</gmd:title>
+							<gmd:date gco:nilReason="unknown" xlink:type="simple"/>
+						</gmd:CI_Citation>
+					</gmd:citation>
+					<gmd:abstract gco:nilReason="unknown"/>
+					<gmd:pointOfContact xlink:type="simple">
+						<gmd:CI_ResponsibleParty>
+							<gmd:organisationName gco:nilReason="unknown"/>
+							<gmd:contactInfo gco:nilReason="unknown" xlink:type="simple"/>
+							<gmd:role>
+								<gmd:CI_RoleCode codeList="../ISO_19139_Schemas/resources/codeList.xml#CI_RoleCode" codeListValue="resourceProvider">resourceProvider</gmd:CI_RoleCode>
+							</gmd:role>
+						</gmd:CI_ResponsibleParty>
+					</gmd:pointOfContact>
+					<gmd:resourceConstraints gco:nilReason="unknown" xlink:type="simple"/>
+					<gmd:language>
+						<gmd:LanguageCode codeList="./resources/codeList.xml#LanguageCode" codeListValue="eng">eng</gmd:LanguageCode>
+					</gmd:language>
+					<gmd:topicCategory>
+						<gmd:MD_TopicCategoryCode>transportation</gmd:MD_TopicCategoryCode>
+					</gmd:topicCategory>
+					<gmd:extent xlink:type="simple">
+						<gmd:EX_Extent>
+							<gmd:geographicElement gco:nilReason="unknown" xlink:type="simple"/>
+							<gmd:temporalElement xlink:type="simple">
+								<gmd:EX_TemporalExtent>
+									<gmd:extent xlink:type="simple">
+										<gml:TimePeriod gml:id="id6901">
+											<gml:beginPosition indeterminatePosition="unknown"/>
+											<gml:endPosition indeterminatePosition="unknown"/>
+										</gml:TimePeriod>
+									</gmd:extent>
+								</gmd:EX_TemporalExtent>
+							</gmd:temporalElement>
+						</gmd:EX_Extent>
+					</gmd:extent>
+				</gmd:MD_DataIdentification>
+			</gmd:identificationInfo>
+		</gmd:MD_Metadata>
+	</aixm:messageMetadata>
+	<message:hasMember xlink:type="simple">
+		<aixm:AirportHeliport gml:id="id12229">
+			<gml:identifier codeSpace="urn:uuid:">f5fecbc5-6a8c-4cd5-8ace-48c34d46e528</gml:identifier>
+			<gml:boundedBy xsi:nil="true"/>
+			<aixm:timeSlice>
+				<aixm:AirportHeliportTimeSlice gml:id="id8668">
+					<gml:validTime xlink:type="simple">
+						<gml:TimeInstant gml:id="id11975">
+							<gml:timePosition>2022-07-14T00:00:00Z</gml:timePosition>
+						</gml:TimeInstant>
+					</gml:validTime>
+					<aixm:interpretation>SNAPSHOT</aixm:interpretation>
+					<aixm:featureLifetime xlink:type="simple">
+						<gml:TimePeriod gml:id="id12102">
+							<gml:beginPosition>2018-05-24T00:00:00Z</gml:beginPosition>
+							<gml:endPosition indeterminatePosition="unknown"/>
+						</gml:TimePeriod>
+					</aixm:featureLifetime>
+					<aixm:designator>EGEF</aixm:designator>
+					<aixm:name>FAIR ISLE</aixm:name>
+					<aixm:locationIndicatorICAO>EGEF</aixm:locationIndicatorICAO>
+					<aixm:designatorIATA xsi:nil="true"/>
+					<aixm:type>AD</aixm:type>
+					<aixm:certifiedICAO xsi:nil="true"/>
+					<aixm:privateUse xsi:nil="true"/>
+					<aixm:controlType xsi:nil="true"/>
+					<aixm:fieldElevation uom="FT">237.05</aixm:fieldElevation>
+					<aixm:fieldElevationAccuracy xsi:nil="true"/>
+					<aixm:verticalDatum>OTHER:OSGM02</aixm:verticalDatum>
+					<aixm:magneticVariation>-0.9790</aixm:magneticVariation>
+					<aixm:magneticVariationAccuracy>0.4246</aixm:magneticVariationAccuracy>
+					<aixm:dateMagneticVariation>2022</aixm:dateMagneticVariation>
+					<aixm:magneticVariationChange>0.2367</aixm:magneticVariationChange>
+					<aixm:referenceTemperature uom="C">14</aixm:referenceTemperature>
+					<aixm:altimeterCheckLocation xsi:nil="true"/>
+					<aixm:secondaryPowerSupply xsi:nil="true"/>
+					<aixm:windDirectionIndicator xsi:nil="true"/>
+					<aixm:landingDirectionIndicator xsi:nil="true"/>
+					<aixm:transitionAltitude xsi:nil="true"/>
+					<aixm:transitionLevel xsi:nil="true"/>
+					<aixm:lowestTemperature xsi:nil="true"/>
+					<aixm:abandoned xsi:nil="true"/>
+					<aixm:certificationDate>2008-12-04</aixm:certificationDate>
+					<aixm:certificationExpirationDate xsi:nil="true"/>
+					<aixm:responsibleOrganisation>
+						<aixm:AirportHeliportResponsibilityOrganisation gml:id="id11848">
+							<aixm:timeInterval xsi:nil="true"/>
+							<aixm:annotation xsi:nil="true"/>
+							<aixm:specialDateAuthority xsi:nil="true"/>
+							<aixm:role xsi:nil="true"/>
+							<aixm:theOrganisationAuthority xlink:type="simple" xlink:href="urn:uuid:b6a8c640-7153-4693-902a-3c39f48661a4"/>
+						</aixm:AirportHeliportResponsibilityOrganisation>
+					</aixm:responsibleOrganisation>
+					<aixm:ARP>
+						<aixm:ElevatedPoint srsName="urn:ogc:def:crs:EPSG::4326" gml:id="id8666">
+							<gml:pos srsName="urn:ogc:def:crs:EPSG::4326">59.5347278 -1.6285111</gml:pos>
+							<aixm:horizontalAccuracy xsi:nil="true"/>
+							<aixm:annotation xsi:nil="true"/>
+							<aixm:elevation xsi:nil="true"/>
+							<aixm:geoidUndulation uom="FT">161</aixm:geoidUndulation>
+							<aixm:verticalDatum xsi:nil="true"/>
+							<aixm:verticalAccuracy xsi:nil="true"/>
+						</aixm:ElevatedPoint>
+					</aixm:ARP>
+					<aixm:aviationBoundary xsi:nil="true"/>
+					<aixm:contact>
+						<aixm:ContactInformation gml:id="id8925">
+							<aixm:name>THE NATIONAL TRUST FOR SCOTLAND.</aixm:name>
+							<aixm:address>
+								<aixm:PostalAddress gml:id="id9511">
+									<aixm:annotation xsi:nil="true"/>
+									<aixm:deliveryPoint>Fair Isle, Shetland, ZE2 9TU</aixm:deliveryPoint>
+								</aixm:PostalAddress>
+							</aixm:address>
+							<aixm:networkNode>
+								<aixm:OnlineContact gml:id="id9235">
+									<aixm:annotation>
+										<aixm:Note gml:id="id9236">
+											<aixm:purpose>REMARK</aixm:purpose>
+											<aixm:translatedNote>
+												<aixm:LinguisticNote gml:id="id9237">
+													<aixm:note lang="eng">Address to substantiate AFS connectivity.</aixm:note>
+												</aixm:LinguisticNote>
+											</aixm:translatedNote>
+										</aixm:Note>
+									</aixm:annotation>
+									<aixm:network>AFTN</aixm:network>
+									<aixm:linkage>EGEF</aixm:linkage>
+								</aixm:OnlineContact>
+							</aixm:networkNode>
+							<aixm:phoneFax>
+								<aixm:TelephoneContact gml:id="id10054">
+									<aixm:annotation xsi:nil="true"/>
+									<aixm:voice>01595-760224</aixm:voice>
+								</aixm:TelephoneContact>
+							</aixm:phoneFax>
+							<aixm:phoneFax>
+								<aixm:TelephoneContact gml:id="id10055">
+									<aixm:annotation xsi:nil="true"/>
+									<aixm:facsimile>01595-760252</aixm:facsimile>
+								</aixm:TelephoneContact>
+							</aixm:phoneFax>
+							<aixm:annotation xsi:nil="true"/>
+						</aixm:ContactInformation>
+					</aixm:contact>
+					<aixm:availability>
+						<aixm:AirportHeliportAvailability gml:id="id10732">
+							<aixm:annotation>
+								<aixm:Note gml:id="id10733">
+									<aixm:propertyName>timeInterval</aixm:propertyName>
+									<aixm:purpose>OTHER:AIXM45_MAPPING</aixm:purpose>
+									<aixm:translatedNote>
+										<aixm:LinguisticNote gml:id="id10734">
+											<aixm:note lang="eng">Daylight only subject to PPR .</aixm:note>
+										</aixm:LinguisticNote>
+									</aixm:translatedNote>
+								</aixm:Note>
+							</aixm:annotation>
+							<aixm:annotation>
+								<aixm:Note gml:id="id10735">
+									<aixm:propertyName>timeInterval</aixm:propertyName>
+									<aixm:purpose>WARNING</aixm:purpose>
+									<aixm:translatedNote>
+										<aixm:LinguisticNote gml:id="id10736">
+											<aixm:note lang="eng">OTHER</aixm:note>
+										</aixm:LinguisticNote>
+									</aixm:translatedNote>
+								</aixm:Note>
+							</aixm:annotation>
+							<aixm:operationalStatus>NORMAL</aixm:operationalStatus>
+							<aixm:usage>
+								<aixm:AirportHeliportUsage gml:id="id11325">
+									<aixm:type>PERMIT</aixm:type>
+									<aixm:selection>
+										<aixm:ConditionCombination gml:id="id11786">
+											<aixm:logicalOperator>OR</aixm:logicalOperator>
+											<aixm:flight>
+												<aixm:FlightCharacteristic gml:id="id11434">
+													<aixm:rule>VFR</aixm:rule>
+													<aixm:origin>NTL</aixm:origin>
+													<aixm:purpose>PRIVATE</aixm:purpose>
+													<aixm:annotation xsi:nil="true"/>
+												</aixm:FlightCharacteristic>
+											</aixm:flight>
+										</aixm:ConditionCombination>
+									</aixm:selection>
+									<aixm:annotation xsi:nil="true"/>
+								</aixm:AirportHeliportUsage>
+							</aixm:usage>
+						</aixm:AirportHeliportAvailability>
+					</aixm:availability>
+					<aixm:annotation>
+						<aixm:Note gml:id="id8662">
+							<aixm:propertyName>certificationExpirationDate</aixm:propertyName>
+							<aixm:purpose>REMARK</aixm:purpose>
+							<aixm:translatedNote>
+								<aixm:LinguisticNote gml:id="id8663">
+									<aixm:note lang="eng">Valid until: Unlimited</aixm:note>
+								</aixm:LinguisticNote>
+							</aixm:translatedNote>
+						</aixm:Note>
+					</aixm:annotation>
+					<aixm:annotation>
+						<aixm:Note gml:id="id8664">
+							<aixm:propertyName>airportLocation</aixm:propertyName>
+							<aixm:purpose>DESCRIPTION</aixm:purpose>
+							<aixm:translatedNote>
+								<aixm:LinguisticNote gml:id="id8665">
+									<aixm:note lang="eng">On Fair Isle.</aixm:note>
+								</aixm:LinguisticNote>
+							</aixm:translatedNote>
+						</aixm:Note>
+					</aixm:annotation>
+					<aixm:extension>
+						<nats:AirportHeliportExtension gml:id="id8667">
+							<nats:opsHoursRmk>This aerodrome is PPR.</nats:opsHoursRmk>
+							<nats:handlingRmk xsi:nil="true"/>
+							<nats:passengerFacilityRmk xsi:nil="true"/>
+							<nats:insCheckpointTxt xsi:nil="true"/>
+							<nats:apronTaxiwayCheckpointRmk xsi:nil="true"/>
+							<nats:guidanceLineTxt xsi:nil="true"/>
+							<nats:stopBarTxt xsi:nil="true"/>
+							<nats:surfaceGuidanceRmk xsi:nil="true"/>
+							<nats:otherLightingRmk xsi:nil="true"/>
+							<nats:heliportMarkingRmk xsi:nil="true"/>
+							<nats:rwyProtectionMeasuresTxt xsi:nil="true"/>
+						</nats:AirportHeliportExtension>
+					</aixm:extension>
+				</aixm:AirportHeliportTimeSlice>
+			</aixm:timeSlice>
+		</aixm:AirportHeliport>
+	</message:hasMember>
+	<message:hasMember xlink:type="simple">
+		<aixm:Navaid gml:id="id39286">
+			<gml:identifier codeSpace="urn:uuid:">4cfb2967-0fee-451c-9aa3-9ae2e0d6e3a6</gml:identifier>
+			<gml:boundedBy xsi:nil="true"/>
+			<aixm:timeSlice>
+				<aixm:NavaidTimeSlice gml:id="id36935">
+					<gml:validTime xlink:type="simple">
+						<gml:TimeInstant gml:id="id38722">
+							<gml:timePosition>2022-07-14T00:00:00Z</gml:timePosition>
+						</gml:TimeInstant>
+					</gml:validTime>
+					<aixm:interpretation>SNAPSHOT</aixm:interpretation>
+					<aixm:featureLifetime xlink:type="simple">
+						<gml:TimePeriod gml:id="id39004">
+							<gml:beginPosition>2019-09-12T00:00:00Z</gml:beginPosition>
+							<gml:endPosition indeterminatePosition="unknown"/>
+						</gml:TimePeriod>
+					</aixm:featureLifetime>
+					<aixm:type>DME</aixm:type>
+					<aixm:designator>GAM</aixm:designator>
+					<aixm:name>GAMSTON</aixm:name>
+					<aixm:flightChecked xsi:nil="true"/>
+					<aixm:purpose>ENROUTE</aixm:purpose>
+					<aixm:signalPerformance xsi:nil="true"/>
+					<aixm:courseQuality xsi:nil="true"/>
+					<aixm:integrityLevel xsi:nil="true"/>
+					<aixm:navaidEquipment>
+						<aixm:NavaidComponent gml:id="id38691">
+							<aixm:providesNavigableLocation>YES</aixm:providesNavigableLocation>
+							<aixm:annotation xsi:nil="true"/>
+							<aixm:theNavaidEquipment xlink:type="simple" xlink:href="urn:uuid:6e74d472-ed24-426c-a460-78647e80074b"/>
+						</aixm:NavaidComponent>
+					</aixm:navaidEquipment>
+					<aixm:location>
+						<aixm:ElevatedPoint srsName="urn:ogc:def:crs:EPSG::4326" gml:id="id36938">
+							<gml:pos srsName="urn:ogc:def:crs:EPSG::4326">53.2814667 -0.9471639</gml:pos>
+							<aixm:horizontalAccuracy xsi:nil="true"/>
+							<aixm:annotation xsi:nil="true"/>
+							<aixm:elevation uom="FT">115</aixm:elevation>
+							<aixm:geoidUndulation xsi:nil="true"/>
+							<aixm:verticalDatum>OTHER:OSGM02</aixm:verticalDatum>
+							<aixm:verticalAccuracy xsi:nil="true"/>
+						</aixm:ElevatedPoint>
+					</aixm:location>
+					<aixm:annotation>
+						<aixm:Note gml:id="id36939">
+							<aixm:propertyName>forEnRoute</aixm:propertyName>
+							<aixm:purpose>REMARK</aixm:purpose>
+							<aixm:translatedNote>
+								<aixm:LinguisticNote gml:id="id36940">
+									<aixm:note lang="eng">No associated En-route VOR.
+DME DOC: 80 NM/25000 FT.</aixm:note>
+								</aixm:LinguisticNote>
+							</aixm:translatedNote>
+						</aixm:Note>
+					</aixm:annotation>
+				</aixm:NavaidTimeSlice>
+			</aixm:timeSlice>
+		</aixm:Navaid>
+	</message:hasMember>
+	<message:hasMember xlink:type="simple">
+		<aixm:Airspace gml:id="id20632">
+			<gml:identifier codeSpace="urn:uuid:">69b841f4-e4bc-4b37-bafb-ceef401095d9</gml:identifier>
+			<gml:boundedBy xsi:nil="true"/>
+			<aixm:timeSlice>
+				<aixm:AirspaceTimeSlice gml:id="id13263">
+					<gml:validTime xlink:type="simple">
+						<gml:TimeInstant gml:id="id19850">
+							<gml:timePosition>2022-07-14T00:00:00Z</gml:timePosition>
+						</gml:TimeInstant>
+					</gml:validTime>
+					<aixm:interpretation>SNAPSHOT</aixm:interpretation>
+					<aixm:featureLifetime xlink:type="simple">
+						<gml:TimePeriod gml:id="id20241">
+							<gml:beginPosition>2018-05-24T00:00:00Z</gml:beginPosition>
+							<gml:endPosition indeterminatePosition="unknown"/>
+						</gml:TimePeriod>
+					</aixm:featureLifetime>
+					<aixm:type>D</aixm:type>
+					<aixm:designator>EG D406C</aixm:designator>
+					<aixm:localType xsi:nil="true"/>
+					<aixm:name>ESKMEALS</aixm:name>
+					<aixm:designatorICAO>NO</aixm:designatorICAO>
+					<aixm:controlType xsi:nil="true"/>
+					<aixm:upperLowerSeparation xsi:nil="true"/>
+					<aixm:protectedRoute xsi:nil="true"/>
+					<aixm:geometryComponent>
+						<aixm:AirspaceGeometryComponent gml:id="id17252">
+							<aixm:operation>BASE</aixm:operation>
+							<aixm:operationSequence>1</aixm:operationSequence>
+							<aixm:annotation xsi:nil="true"/>
+							<aixm:theAirspaceVolume>
+								<aixm:AirspaceVolume gml:id="id17253">
+									<aixm:upperLimit uom="FT">50000</aixm:upperLimit>
+									<aixm:upperLimitReference>MSL</aixm:upperLimitReference>
+									<aixm:lowerLimit uom="FT">0</aixm:lowerLimit>
+									<aixm:lowerLimitReference>SFC</aixm:lowerLimitReference>
+									<aixm:horizontalProjection>
+										<aixm:Surface srsName="urn:ogc:def:crs:EPSG::4326" gml:id="id17254">
+											<gml:patches>
+												<gml:PolygonPatch interpolation="planar">
+													<gml:exterior>
+														<gml:Ring>
+															<gml:curveMember xlink:type="simple">
+																<gml:Curve gml:id="id17255">
+																	<gml:segments>
+																		<gml:ArcByCenterPoint interpolation="circularArcCenterPointWithRadius" numArc="1">
+																			<gml:pointProperty xlink:type="simple">
+																				<aixm:Point gml:id="id17256">
+																					<gml:pos>54.31667 -3.41806</gml:pos>
+																					<aixm:horizontalAccuracy xsi:nil="true"/>
+																					<aixm:annotation xsi:nil="true"/>
+																				</aixm:Point>
+																			</gml:pointProperty>
+																			<gml:radius uom="[nmi_i]">20</gml:radius>
+																			<gml:startAngle uom="deg">270.9964127258757571325986646115779876708984375</gml:startAngle>
+																			<gml:endAngle uom="deg">236.994908182851503397614578716456890106201171875</gml:endAngle>
+																		</gml:ArcByCenterPoint>
+																		<gml:GeodesicString interpolation="geodesic">
+																			<gml:pointProperty xlink:type="simple">
+																				<aixm:Point gml:id="id17257">
+																					<gml:pos>54.13444 -3.89333</gml:pos>
+																					<aixm:horizontalAccuracy xsi:nil="true"/>
+																					<aixm:annotation xsi:nil="true"/>
+																				</aixm:Point>
+																			</gml:pointProperty>
+																			<gml:pointProperty xlink:type="simple">
+																				<aixm:Point gml:id="id17258">
+																					<gml:pos>54.17417 -4.14556</gml:pos>
+																					<aixm:horizontalAccuracy xsi:nil="true"/>
+																				</aixm:Point>
+																			</gml:pointProperty>
+																		</gml:GeodesicString>
+																		<gml:ArcByCenterPoint interpolation="circularArcCenterPointWithRadius" numArc="1">
+																			<gml:pointProperty xlink:type="simple">
+																				<aixm:Point gml:id="id17259">
+																					<gml:pos>54.31667 -3.41806</gml:pos>
+																					<aixm:horizontalAccuracy xsi:nil="true"/>
+																					<aixm:annotation xsi:nil="true"/>
+																				</aixm:Point>
+																			</gml:pointProperty>
+																			<gml:radius uom="[nmi_i]">27</gml:radius>
+																			<gml:startAngle uom="deg">251.802690036823463515247567556798458099365234375</gml:startAngle>
+																			<gml:endAngle uom="deg">260.08611916376077033419278450310230255126953125</gml:endAngle>
+																		</gml:ArcByCenterPoint>
+																		<gml:GeodesicString interpolation="geodesic">
+																			<gml:pointProperty xlink:type="simple">
+																				<aixm:Point gml:id="id17260">
+																					<gml:pos>54.23694 -4.17361</gml:pos>
+																					<aixm:horizontalAccuracy xsi:nil="true"/>
+																					<aixm:annotation xsi:nil="true"/>
+																				</aixm:Point>
+																			</gml:pointProperty>
+																			<gml:pointProperty xlink:type="simple">
+																				<aixm:Point gml:id="id17261">
+																					<gml:pos>54.32111 -3.98722</gml:pos>
+																					<aixm:horizontalAccuracy xsi:nil="true"/>
+																				</aixm:Point>
+																			</gml:pointProperty>
+																		</gml:GeodesicString>
+																	</gml:segments>
+																</gml:Curve>
+															</gml:curveMember>
+														</gml:Ring>
+													</gml:exterior>
+												</gml:PolygonPatch>
+											</gml:patches>
+											<aixm:horizontalAccuracy xsi:nil="true"/>
+											<aixm:annotation xsi:nil="true"/>
+										</aixm:Surface>
+									</aixm:horizontalProjection>
+									<aixm:centreline xsi:nil="true"/>
+									<aixm:annotation xsi:nil="true"/>
+								</aixm:AirspaceVolume>
+							</aixm:theAirspaceVolume>
+						</aixm:AirspaceGeometryComponent>
+					</aixm:geometryComponent>
+					<aixm:activation>
+						<aixm:AirspaceActivation gml:id="id15305">
+							<aixm:annotation>
+								<aixm:Note gml:id="id15306">
+									<aixm:propertyName>timeInterval</aixm:propertyName>
+									<aixm:purpose>OTHER:AIXM45_MAPPING</aixm:purpose>
+									<aixm:translatedNote>
+										<aixm:LinguisticNote gml:id="id15307">
+											<aixm:note lang="eng">Activated by NOTAM.</aixm:note>
+										</aixm:LinguisticNote>
+									</aixm:translatedNote>
+								</aixm:Note>
+							</aixm:annotation>
+							<aixm:annotation>
+								<aixm:Note gml:id="id15308">
+									<aixm:propertyName>timeInterval</aixm:propertyName>
+									<aixm:purpose>WARNING</aixm:purpose>
+									<aixm:translatedNote>
+										<aixm:LinguisticNote gml:id="id15309">
+											<aixm:note lang="eng">activity periods to be published by NOTAM</aixm:note>
+										</aixm:LinguisticNote>
+									</aixm:translatedNote>
+								</aixm:Note>
+							</aixm:annotation>
+							<aixm:status>AVBL_FOR_ACTIVATION</aixm:status>
+						</aixm:AirspaceActivation>
+					</aixm:activation>
+					<aixm:annotation>
+						<aixm:Note gml:id="id13266">
+							<aixm:purpose>REMARK</aixm:purpose>
+							<aixm:translatedNote>
+								<aixm:LinguisticNote gml:id="id13267">
+									<aixm:note lang="eng">AMC - Manageable.
+
+Activity: Ordnance, Munitions and Explosives / Unmanned Aircraft System (VLOS/BVLOS) / Balloons / Electronic/Optical Hazards.
+
+Service: DAAIS: Eskmeals Information on 122.750 MHz or London Information on 125.475 MHz.
+
+Contact: Pre-flight information: Eskmeals Range, Tel: 01229-712245/712233.
+
+Danger Area Authority: DE&amp;S.</aixm:note>
+								</aixm:LinguisticNote>
+							</aixm:translatedNote>
+						</aixm:Note>
+					</aixm:annotation>
+				</aixm:AirspaceTimeSlice>
+			</aixm:timeSlice>
+		</aixm:Airspace>
+	</message:hasMember>
+	<message:hasMember xlink:type="simple">
+		<aixm:DesignatedPoint gml:id="id29284">
+			<gml:identifier codeSpace="urn:uuid:">5a5b0fa8-4792-4f05-b443-9a24710ea710</gml:identifier>
+			<gml:boundedBy xsi:nil="true"/>
+			<aixm:timeSlice>
+				<aixm:DesignatedPointTimeSlice gml:id="id24253">
+					<gml:validTime xlink:type="simple">
+						<gml:TimeInstant gml:id="id27320">
+							<gml:timePosition>2022-07-14T00:00:00Z</gml:timePosition>
+						</gml:TimeInstant>
+					</gml:validTime>
+					<aixm:interpretation>SNAPSHOT</aixm:interpretation>
+					<aixm:featureLifetime xlink:type="simple">
+						<gml:TimePeriod gml:id="id28302">
+							<gml:beginPosition>2019-09-12T00:00:00Z</gml:beginPosition>
+							<gml:endPosition indeterminatePosition="unknown"/>
+						</gml:TimePeriod>
+					</aixm:featureLifetime>
+					<aixm:designator>ORVUL</aixm:designator>
+					<aixm:type>ICAO</aixm:type>
+					<aixm:name>ORVUL</aixm:name>
+					<aixm:location>
+						<aixm:Point srsName="urn:ogc:def:crs:EPSG::4326" gml:id="id24256">
+							<gml:pos srsName="urn:ogc:def:crs:EPSG::4326">55.177366667 -4.168616667</gml:pos>
+							<aixm:horizontalAccuracy uom="M">30</aixm:horizontalAccuracy>
+							<aixm:annotation xsi:nil="true"/>
+						</aixm:Point>
+					</aixm:location>
+					<aixm:aimingPoint xsi:nil="true"/>
+					<aixm:airportHeliport xsi:nil="true"/>
+					<aixm:runwayPoint xsi:nil="true"/>
+					<aixm:annotation xsi:nil="true"/>
+				</aixm:DesignatedPointTimeSlice>
+			</aixm:timeSlice>
+		</aixm:DesignatedPoint>
+	</message:hasMember>
+	<message:hasMember xlink:type="simple">
+		<aixm:Route gml:id="id31514">
+			<gml:identifier codeSpace="urn:uuid:">35fe3d2f-80f1-4488-b0d7-9579ef646dfc</gml:identifier>
+			<gml:boundedBy xsi:nil="true"/>
+			<aixm:timeSlice>
+				<aixm:RouteTimeSlice gml:id="id29759">
+					<gml:validTime xlink:type="simple">
+						<gml:TimeInstant gml:id="id31036">
+							<gml:timePosition>2022-07-14T00:00:00Z</gml:timePosition>
+						</gml:TimeInstant>
+					</gml:validTime>
+					<aixm:interpretation>SNAPSHOT</aixm:interpretation>
+					<aixm:featureLifetime xlink:type="simple">
+						<gml:TimePeriod gml:id="id31275">
+							<gml:beginPosition>2019-05-23T00:00:00Z</gml:beginPosition>
+							<gml:endPosition indeterminatePosition="unknown"/>
+						</gml:TimePeriod>
+					</aixm:featureLifetime>
+					<aixm:designatorPrefix nilReason="inapplicable" xsi:nil="true"/>
+					<aixm:designatorSecondLetter>Z</aixm:designatorSecondLetter>
+					<aixm:designatorNumber>250</aixm:designatorNumber>
+					<aixm:multipleIdentifier nilReason="inapplicable" xsi:nil="true"/>
+					<aixm:locationDesignator>EUR</aixm:locationDesignator>
+					<aixm:name xsi:nil="true"/>
+					<aixm:type>ATS</aixm:type>
+					<aixm:flightRule xsi:nil="true"/>
+					<aixm:internationalUse xsi:nil="true"/>
+					<aixm:militaryUse xsi:nil="true"/>
+					<aixm:militaryTrainingType xsi:nil="true"/>
+					<aixm:userOrganisation xsi:nil="true"/>
+					<aixm:annotation xsi:nil="true"/>
+				</aixm:RouteTimeSlice>
+			</aixm:timeSlice>
+		</aixm:Route>
+	</message:hasMember>
+	<message:hasMember xlink:type="simple">
+		<aixm:RouteSegment gml:id="id72692">
+			<gml:identifier codeSpace="urn:uuid:">b14b0b74-8f77-44a0-8cfa-a19fbcb33a2c</gml:identifier>
+			<gml:boundedBy xsi:nil="true"/>
+			<aixm:timeSlice>
+				<aixm:RouteSegmentTimeSlice gml:id="id44035">
+					<gml:validTime xlink:type="simple">
+						<gml:TimeInstant gml:id="id69922">
+							<gml:timePosition>2022-07-14T00:00:00Z</gml:timePosition>
+						</gml:TimeInstant>
+					</gml:validTime>
+					<aixm:interpretation>SNAPSHOT</aixm:interpretation>
+					<aixm:featureLifetime xlink:type="simple">
+						<gml:TimePeriod gml:id="id71307">
+							<gml:beginPosition>2018-12-06T00:00:00Z</gml:beginPosition>
+							<gml:endPosition indeterminatePosition="unknown"/>
+						</gml:TimePeriod>
+					</aixm:featureLifetime>
+					<aixm:level xsi:nil="true"/>
+					<aixm:upperLimit uom="FL">460</aixm:upperLimit>
+					<aixm:upperLimitReference>STD</aixm:upperLimitReference>
+					<aixm:lowerLimit uom="FL">135</aixm:lowerLimit>
+					<aixm:lowerLimitReference>STD</aixm:lowerLimitReference>
+					<aixm:minimumObstacleClearanceAltitude xsi:nil="true"/>
+					<aixm:pathType xsi:nil="true"/>
+					<aixm:trueTrack>268.8272</aixm:trueTrack>
+					<aixm:magneticTrack>267.9357</aixm:magneticTrack>
+					<aixm:reverseTrueTrack>88.3664</aixm:reverseTrueTrack>
+					<aixm:reverseMagneticTrack>087.6704</aixm:reverseMagneticTrack>
+					<aixm:length uom="NM">22.0568</aixm:length>
+					<aixm:widthLeft xsi:nil="true"/>
+					<aixm:widthRight xsi:nil="true"/>
+					<aixm:turnDirection xsi:nil="true"/>
+					<aixm:signalGap xsi:nil="true"/>
+					<aixm:minimumEnrouteAltitude xsi:nil="true"/>
+					<aixm:minimumCrossingAtEnd xsi:nil="true"/>
+					<aixm:minimumCrossingAtEndReference xsi:nil="true"/>
+					<aixm:maximumCrossingAtEnd xsi:nil="true"/>
+					<aixm:maximumCrossingAtEndReference xsi:nil="true"/>
+					<aixm:navigationType>RNAV</aixm:navigationType>
+					<aixm:requiredNavigationPerformance>5</aixm:requiredNavigationPerformance>
+					<aixm:designatorSuffix xsi:nil="true"/>
+					<aixm:start>
+						<aixm:EnRouteSegmentPoint gml:id="id44043">
+							<aixm:reportingATC>ON_REQUEST</aixm:reportingATC>
+							<aixm:flyOver xsi:nil="true"/>
+							<aixm:waypoint xsi:nil="true"/>
+							<aixm:radarGuidance xsi:nil="true"/>
+							<aixm:pointChoice_fixDesignatedPoint xlink:type="simple" xlink:href="urn:uuid:59bd7492-ed59-43b1-a6e2-a6326639f00a"/>
+							<aixm:extendedServiceVolume xsi:nil="true"/>
+							<aixm:annotation xsi:nil="true"/>
+							<aixm:roleFreeFlight xsi:nil="true"/>
+							<aixm:roleRVSM xsi:nil="true"/>
+							<aixm:turnRadius xsi:nil="true"/>
+							<aixm:roleMilitaryTraining xsi:nil="true"/>
+						</aixm:EnRouteSegmentPoint>
+					</aixm:start>
+					<aixm:routeFormed xlink:type="simple" xlink:href="urn:uuid:e0075ec3-f0a9-4a88-8b95-7f29a083136c"/>
+					<aixm:curveExtent>
+						<aixm:Curve gml:id="id44038">
+							<gml:segments>
+								<gml:GeodesicString interpolation="geodesic">
+									<gml:pointProperty xlink:type="simple">
+										<aixm:Point srsName="urn:ogc:def:crs:EPSG::4326" gml:id="id44039">
+											<gml:pos srsName="urn:ogc:def:crs:EPSG::4326">51.540220667 0.977041556</gml:pos>
+										</aixm:Point>
+									</gml:pointProperty>
+									<gml:pointProperty xlink:type="simple">
+										<aixm:Point srsName="urn:ogc:def:crs:EPSG::4326" gml:id="id44040">
+											<gml:pos srsName="urn:ogc:def:crs:EPSG::4326">51.531229778 0.388494583</gml:pos>
+										</aixm:Point>
+									</gml:pointProperty>
+								</gml:GeodesicString>
+							</gml:segments>
+						</aixm:Curve>
+					</aixm:curveExtent>
+					<aixm:end>
+						<aixm:EnRouteSegmentPoint gml:id="id44044">
+							<aixm:reportingATC>ON_REQUEST</aixm:reportingATC>
+							<aixm:flyOver xsi:nil="true"/>
+							<aixm:waypoint xsi:nil="true"/>
+							<aixm:radarGuidance xsi:nil="true"/>
+							<aixm:pointChoice_fixDesignatedPoint xlink:type="simple" xlink:href="urn:uuid:f018cb83-33c4-47d8-85e9-725128169e84"/>
+							<aixm:extendedServiceVolume xsi:nil="true"/>
+							<aixm:annotation xsi:nil="true"/>
+							<aixm:roleFreeFlight xsi:nil="true"/>
+							<aixm:roleRVSM xsi:nil="true"/>
+							<aixm:turnRadius xsi:nil="true"/>
+							<aixm:roleMilitaryTraining xsi:nil="true"/>
+						</aixm:EnRouteSegmentPoint>
+					</aixm:end>
+					<aixm:availability>
+						<aixm:RouteAvailability gml:id="id66469">
+							<aixm:annotation xsi:nil="true"/>
+							<aixm:direction>FORWARD</aixm:direction>
+							<aixm:status>OPEN</aixm:status>
+							<aixm:levels>
+								<aixm:AirspaceLayer gml:id="id68346">
+									<aixm:upperLimit uom="FL">430</aixm:upperLimit>
+									<aixm:upperLimitReference>STD</aixm:upperLimitReference>
+									<aixm:lowerLimit uom="FL">140</aixm:lowerLimit>
+									<aixm:lowerLimitReference>STD</aixm:lowerLimitReference>
+									<aixm:discreteLevelSeries xlink:type="simple" xlink:href="urn:uuid:635057b1-f3f1-43ea-8a88-0433e7aee80b"/>
+									<aixm:annotation xsi:nil="true"/>
+								</aixm:AirspaceLayer>
+							</aixm:levels>
+						</aixm:RouteAvailability>
+					</aixm:availability>
+					<aixm:annotation>
+						<aixm:Note gml:id="id44041">
+							<aixm:purpose>REMARK</aixm:purpose>
+							<aixm:translatedNote>
+								<aixm:LinguisticNote gml:id="id44042">
+									<aixm:note lang="eng">FL 460/FL 195 Class C,
+FL 195/FL 135 Class A.
+
+Between IDITU and 5 NM from IDITU:
+London ACC
+Freq: 128.160 (FL 245 and above);
+Freq: 129.605 (Below FL 245).
+
+Between 5 NM from IDITU and IPKUS:
+London ACC
+Freq: 127.430 (FL 305 and above);
+Freq: 132.605 (Below FL 305 to FL 215);
+Freq: 127.955 (Below FL 215 to FL 175);
+Freq: 123.905 (Below FL 175).</aixm:note>
+								</aixm:LinguisticNote>
+							</aixm:translatedNote>
+						</aixm:Note>
+					</aixm:annotation>
+				</aixm:RouteSegmentTimeSlice>
+			</aixm:timeSlice>
+		</aixm:RouteSegment>
+	</message:hasMember>
+</message:AIXMBasicMessage>
