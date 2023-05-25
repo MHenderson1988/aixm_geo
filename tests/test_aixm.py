@@ -24,10 +24,12 @@ class TestGeoExtractor(TestCase):
         self.ah = GeoExtractor(self.a.find_aixm_features()[0])
         # Navaid
         self.na = GeoExtractor(self.a.find_aixm_features()[1])
-        # Airspace
+        # Airspace with Arc
         self.airspace = GeoExtractor(self.a.find_aixm_features()[2])
+        # Airspace with Circle
+        self.airspace_circle = GeoExtractor(self.a.find_aixm_features()[3])
         # RouteSegment
-        self.route_segment = GeoExtractor(self.a.find_aixm_features()[5])
+        self.route_segment = GeoExtractor(self.a.find_aixm_features()[6])
 
     def test_get_feature_type(self):
         # Test for AirportHeliport

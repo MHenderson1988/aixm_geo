@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 class AixmGeo:
-    def __init__(self, root: str):
+    def __init__(self, root: Union[str, Path]):
         self.root = etree.parse(root)
         self.namespaces = {'xlink': "http://www.w3.org/1999/xlink",
                            'gml': "http://www.opengis.net/gml/3.2", 'aixm': "http://www.aixm.aero/schema/5.1",
@@ -21,7 +21,9 @@ class AixmGeo:
     def extract_geo_info(self) -> list:
         feature_list = self.find_aixm_features()
         geo_info = [GeoExtractor(x).get_geo_info() for x in feature_list]
-        geo_info
+        for x in geo_info:
+            print(x)
+        return geo_info
 
 
 class GeoExtractor:
@@ -214,6 +216,8 @@ class GeoExtractor:
         elevation_string = f', upper_layer={upper_layer} {upper_layer_uom},' \
                            f' lower_layer={lower_layer} {lower_layer_uom}'
 
+        name = f"{self.get_first_value('.//aixm:designator')} {self.get_first_value('.//aixm:name')}"
+
         root = self.root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection//gml:segments',
                                  namespaces=self.namespaces)
 
@@ -221,7 +225,7 @@ class GeoExtractor:
         for location in root:
             coordinate_string += self.unpack_gml(location.getchildren(), crs=crs)
 
-        coordinate_string += elevation_string
+        coordinate_string = f"{coordinate_string} {elevation_string} name={name}"
         return coordinate_string
 
     def get_crs(self):
