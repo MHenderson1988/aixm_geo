@@ -1,8 +1,9 @@
-from typing import Union
 from datetime import datetime
+from pathlib import Path
+from typing import Union
+
 from lxml import etree
 from pyproj.geod import Geod
-from pathlib import Path
 
 
 class AixmGeo:
@@ -135,12 +136,12 @@ class GeoExtractor:
 
         return attribute
 
-    def get_geo_info(self) -> list:
+    def get_geo_info(self) -> dict:
         """
         Args:
             self
         Returns:
-            geo_info(list): A list of lists containing coordinate strings for intepretation by KmlPlus.
+            geo_info(dict): A dict containing feature information for intepretation by KmlPlus.
         """
         func_dict = {'AirportHeliport': self.get_arp_coordinates, 'Navaid': self.get_navaid_coordinates,
                      'Airspace': self.get_airspace_coordinates,
@@ -152,72 +153,64 @@ class GeoExtractor:
         except KeyError:
             geo_info = None
 
-        return [geo_info]
+        return geo_info
 
-    def get_arp_coordinates(self) -> str:
+    def get_arp_coordinates(self) -> dict:
         """
         Args:
             self
         Returns:
-            coordinate_string(str): A coordinate string
+            geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-        coordinates = self.get_first_value('.//aixm:ARP//gml:pos')
-        elevation = self.get_first_value('.//aixm:fieldElevation')
-        elevation_uom = self.get_first_value_attribute('.//aixm:fieldElevation', attribute_string='uom')
-        name = f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})'
-        coordinate_string = f'{coordinates} {elevation} {elevation_uom}, name={name}'
-        return coordinate_string
+        geo_dict = {
+            'coordinates': self.get_first_value('.//aixm:ARP//gml:pos'),
+            'elevation': self.get_first_value('.//aixm:fieldElevation'),
+            'elevation_uom': self.get_first_value_attribute('.//aixm:fieldElevation', attribute_string='uom'),
+            'name': f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})',
+        }
+
+        return geo_dict
 
     def get_navaid_coordinates(self):
         """
         Args:
             self
         Returns:
-            coordinate_string(str): A coordinate string
+            geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-        coordinates = self.get_first_value('.//aixm:location//gml:pos')
-        elevation = self.get_first_value('.//aixm:location//aixm:elevation')
-        elevation_uom = self.get_first_value_attribute('.//aixm:location//aixm:elevation',
-                                                       attribute_string='uom')
-        name = f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})' \
-               f' {self.get_first_value(".//aixm:type")}'
-        coordinate_string = f'{coordinates} {elevation} {elevation_uom}, name={name}'
+        geo_dict = {
+            'coordinates': self.get_first_value('.//aixm:location//gml:pos'),
+            'elevation': self.get_first_value('.//aixm:location//aixm:elevation'),
+            'elevation_uom': self.get_first_value_attribute('.//aixm:location//aixm:elevation',
+                                                            attribute_string='uom'),
+            'name': f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})' \
+                    f' {self.get_first_value(".//aixm:type")}'
+        }
 
-        return coordinate_string
+        return geo_dict
 
     def get_designated_point_coordinates(self):
         """
         Args:
             self
         Returns:
-            coordinate_string(str): A coordinate string
+            geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-        coordinates = self.get_first_value('.//aixm:location//gml:pos')
-        coordinate_string = f'{coordinates}'
+        geo_dict = {
+            'coordinates': self.get_first_value('.//aixm:location//gml:pos')
+        }
 
-        return coordinate_string
+        return geo_dict
 
     def get_airspace_coordinates(self):
         """
         Args:
             self
         Returns:
-            coordinate_string(str): A coordinate string
+            geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-        upper_layer = self.get_first_value('.//aixm:theAirspaceVolume//aixm:upperLimit')
-        upper_layer_uom = self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:upperLimit',
-                                                         attribute_string='uom')
-        lower_layer = self.get_first_value('.//aixm:theAirspaceVolume//aixm:lowerLimit')
-        lower_layer_uom = self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:lowerLimit',
-                                                         attribute_string='uom')
 
         crs = self.get_crs()
-
-        elevation_string = f', upper_layer={upper_layer} {upper_layer_uom},' \
-                           f' lower_layer={lower_layer} {lower_layer_uom}'
-
-        name = f"{self.get_first_value('.//aixm:designator')} {self.get_first_value('.//aixm:name')}"
-
         root = self.root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection//gml:segments',
                                  namespaces=self.namespaces)
 
@@ -226,8 +219,18 @@ class GeoExtractor:
             unpacked_gml = self.unpack_gml(location.getchildren(), crs=crs)
             coordinate_string += unpacked_gml
 
-        coordinate_string = f"{coordinate_string} {elevation_string} name={name}"
-        return coordinate_string
+        geo_dict = {
+            'upper_layer': self.get_first_value('.//aixm:theAirspaceVolume//aixm:upperLimit'),
+            'upper_layer_uom': self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:upperLimit',
+                                                              attribute_string='uom'),
+            'lower_layer': self.get_first_value('.//aixm:theAirspaceVolume//aixm:lowerLimit'),
+            'lower_layer_uom': self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:lowerLimit',
+                                                              attribute_string='uom'),
+            'name': f"{self.get_first_value('.//aixm:designator')} {self.get_first_value('.//aixm:name')}",
+            'coordinate_string': coordinate_string
+        }
+
+        return geo_dict
 
     def get_crs(self):
         """
@@ -253,14 +256,18 @@ class GeoExtractor:
         Args:
             self
         Returns:
-            coordinate_string (str): A coordinate string
+            geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
         coordinate_string = ''
         root = self.root.findall('.//aixm:curveExtent//gml:segments', namespaces=self.namespaces)
         for location in root:
             coordinate_string += self.unpack_gml(location.getchildren())
 
-        return coordinate_string
+        geo_dict = {
+            'coordinate_string': coordinate_string
+        }
+
+        return geo_dict
 
     def unpack_gml(self, location: etree.Element, **kwargs: str) -> str:
         """
@@ -320,7 +327,7 @@ class GeoExtractor:
 
         return coordinate_string
 
-    def determine_arc_direction(self, start_angle: float, end_angle: float, crs:str) -> str:
+    def determine_arc_direction(self, start_angle: float, end_angle: float, crs: str) -> str:
         """
         Args:
             start_angle(float): Start angle of the arc from it's centre point.
@@ -349,9 +356,11 @@ class GeoExtractor:
         Args:
             location(etree.Element): etree.Element containing specific aixm tags containing geographic information
         Returns:
-            coordinate_string(str): A coordinate string
+            coordinate_string(str): A coordinate string.
         """
+
         coordinate_string = self.get_first_value('.//aixm:Point//gml:pos', subtree=location)
+
         return coordinate_string
 
     def unpack_circle(self, location: etree.Element) -> str:

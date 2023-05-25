@@ -1,7 +1,9 @@
-from unittest import TestCase
-from aixm_geo.aixm_geo import AixmGeo, GeoExtractor
 from pathlib import Path
+from unittest import TestCase
+
 from lxml import etree
+
+from aixm_geo.aixm_geo import AixmGeo, GeoExtractor
 
 
 class TestAixm(TestCase):
