@@ -223,7 +223,8 @@ class GeoExtractor:
 
         coordinate_string = ''
         for location in root:
-            coordinate_string += self.unpack_gml(location.getchildren(), crs=crs)
+            unpacked_gml = self.unpack_gml(location.getchildren(), crs=crs)
+            coordinate_string += unpacked_gml
 
         coordinate_string = f"{coordinate_string} {elevation_string} name={name}"
         return coordinate_string
@@ -330,14 +331,14 @@ class GeoExtractor:
         """
         if crs == '4326':
             if start_angle < end_angle:
-                direction = 'Clockwise'
+                direction = 'clockwise'
             else:
-                direction = 'Anticlockwise'
+                direction = 'anticlockwise'
         elif crs == 'CRS84':
             if start_angle < end_angle:
-                direction = 'Anticlockwise'
+                direction = 'anticlockwise'
             else:
-                direction = 'Clockwise'
+                direction = 'clockwise'
         else:
             raise TypeError(print('Only ESPG::4326 and CRS84 are supported.'))
 
