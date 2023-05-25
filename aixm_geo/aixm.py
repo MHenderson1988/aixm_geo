@@ -183,17 +183,17 @@ class GeoExtractor:
 
         crs = self.get_crs()
 
-        elevation_string = f'lower_layer={lower_layer}, upper_layer={upper_layer}'
+        elevation_string = f', upper_layer={upper_layer} {upper_layer_uom},' \
+                           f' lower_layer={lower_layer} {lower_layer_uom}'
 
         root = self.root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection//gml:segments',
                                  namespaces=self.namespaces)
 
         coordinate_string = ''
         for location in root:
-            coordinate_string += self.unpack_gml(location.getchildren())
+            coordinate_string += self.unpack_gml(location.getchildren(), crs=crs)
 
-        coordinate_string += f', upper_layer={upper_layer} {upper_layer_uom},' \
-                             f' lower_layer={lower_layer} {lower_layer_uom}'
+        coordinate_string += elevation_string
         return coordinate_string
 
     def get_crs(self):
@@ -256,7 +256,7 @@ class GeoExtractor:
 
         coordinate_string = f'start={round(start_coord[1], 5)} {round(start_coord[0], 5)},' \
                             f' end={round(end_coord[1], 5)} {round(end_coord[0], 5)}, centre={centre},' \
-                            f'direction={self.determine_arc_direction(start_angle, end_angle, crs)}'
+                            f' direction={self.determine_arc_direction(float(start_angle), float(end_angle), crs)}'
 
         return coordinate_string
 
