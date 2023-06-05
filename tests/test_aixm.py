@@ -31,7 +31,7 @@ class TestGeoExtractor(TestCase):
         # Airspace with Circle
         self.airspace_circle = GeoExtractor(self.a.find_aixm_features()[3])
         # RouteSegment
-        self.route_segment = GeoExtractor(self.a.find_aixm_features()[6])
+        self.route_segment = GeoExtractor(self.a.find_aixm_features()[5])
 
     def test_get_feature_type(self):
         # Test for AirportHeliport
@@ -61,9 +61,7 @@ class TestGeoExtractor(TestCase):
                          self.route_segment.get_route_segment_coordinates())
 
     def test_determine_arc_direction(self):
-        self.assertEqual('Clockwise', self.airspace.determine_arc_direction(25, 200, '4326'))
-        self.assertEqual('Anticlockwise', self.airspace.determine_arc_direction(250, 200, '4326'))
-        self.assertEqual('Clockwise', self.airspace.determine_arc_direction(250, 200, 'CRS84'))
-        self.assertEqual('Anticlockwise', self.airspace.determine_arc_direction(25, 200, 'CRS84'))
-        with self.assertRaises(TypeError):
-            self.airspace.determine_arc_direction(25, 200, 'Random CRS')
+        self.assertEqual('clockwise', self.airspace.determine_arc_direction(25, 200))
+        self.assertEqual('anticlockwise', self.airspace.determine_arc_direction(250, 200))
+        self.assertNotEqual('clockwise', self.airspace.determine_arc_direction(250, 200))
+        self.assertNotEqual('anticlockwise', self.airspace.determine_arc_direction(25, 200))
