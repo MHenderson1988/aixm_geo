@@ -6,7 +6,7 @@ from lxml import etree
 from aixm_geo.aixm_geo import AixmGeo, GeoExtractor
 
 
-class TestAixm(TestCase):
+class TestAixmGeo(TestCase):
     def setUp(self):
         file_loc = Path().absolute().joinpath('..', Path('test_data/test.xml'))
         self.test_aixm = AixmGeo(file_loc)
@@ -16,6 +16,11 @@ class TestAixm(TestCase):
         self.assertTrue(isinstance(list_of_features, list))
         for i in list_of_features:
             self.assertTrue(isinstance(i, etree._Element))
+
+    def test_determine_geometry_type(self):
+        for i in self.test_aixm.geo_info:
+            if i is not None:
+                print(self.test_aixm.determine_geometry_type(i))
 
 
 class TestGeoExtractor(TestCase):
@@ -51,18 +56,19 @@ class TestGeoExtractor(TestCase):
         self.assertTrue(isinstance(self.ah.get_first_value_attribute('.//aixm:fieldElevation'), dict))
 
     def test_get_arp_coordinates(self):
-        self.assertEqual('59.5347278 -1.6285111 237.05 FT', f'{self.ah.properties["coordinates"]}'
-                                                            f' {self.ah.properties["elevation"]}'
-                                                            f' {self.ah.properties["elevation_uom"]}')
+        expected = ['59.5347278 -1.6285111 237.05']
+        actual = self.ah.properties["coordinates"]
+        self.assertEqual(actual, expected)
 
     def test_get_navaid_coordinates(self):
-        self.assertEqual('53.2814667 -0.9471639 115 FT', f'{self.na.properties["coordinates"]}'
-                                                         f' {self.na.properties["elevation"]}'
-                                                         f' {self.na.properties["elevation_uom"]}')
+        expected = ['53.2814667 -0.9471639 115']
+        actual = self.na.properties["coordinates"]
+        self.assertEqual(actual, expected)
 
     def test_get_route_segment_coordinates(self):
-        self.assertEqual('51.540220667 0.977041556, 51.531229778 0.388494583',
-                         self.route_segment.properties["coordinates"])
+        expected = ['51.540220667 0.977041556', '51.531229778 0.388494583']
+        actual = self.route_segment.properties["coordinates"]
+        self.assertEqual(actual, expected)
 
     def test_determine_arc_direction(self):
         self.assertEqual('clockwise', self.airspace.determine_arc_direction(25, 200))

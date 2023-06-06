@@ -2,6 +2,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
+from kmlplus import kml
 from lxml import etree
 from pyproj.geod import Geod
 
@@ -14,6 +15,7 @@ class AixmGeo:
                            'nats': "http://www.aixm.aero/schema/5.1/extensions/NATS/eSDO",
                            'message': "http://www.aixm.aero/schema/5.1/message",
                            'xsi': "http://www.w3.org/2001/XMLSchema-instance"}
+        self.geo_info = self.extract_geo_info()
 
     def find_aixm_features(self) -> list:
         feature_list = self.root.findall('.//message:hasMember', self.namespaces)
@@ -22,9 +24,55 @@ class AixmGeo:
     def extract_geo_info(self) -> list:
         feature_list = self.find_aixm_features()
         geo_info = [GeoExtractor(x).get_geo_info() for x in feature_list]
-        for x in geo_info:
-            print(x)
         return geo_info
+
+    def build_kml(self, file_name, output_path):
+        kml_obj = kml.KmlPlus(output=output_path, file_name=file_name)
+        for dict in self.geo_info:
+            if dict:
+                self.draw_feature(kml_obj, dict)
+
+    def draw_feature(self, kml_obj, dict):
+        if dict is not None:
+            if dict['feature_type'] == 'RouteSegment':
+                geometry_type = 'LineString'
+            elif dict["coordinates"]:
+                geometry_type = self.determine_geometry_type(dict)
+
+            if geometry_type == 'cylinder':
+                kml_obj.cylinder(dict["coordinates"], dict["radius"], uom=dict["radius_uom"])
+            elif geometry_type == 'point':
+                kml_obj.point(dict["coordinates"])
+            elif geometry_type == 'polyhedron':
+                kml_obj.polyhedron(dict["coordinates"])
+
+            return geometry_type
+        else:
+            pass
+
+    def determine_geometry_type(self, dict):
+        geometry_type = None
+        if len(dict["coordinates"]) == 1:
+            if 'start=' in dict["coordinates"][0]:
+                if dict["upper_layer"]:
+                    geometry_type = 'cylinder'
+            else:
+                geometry_type = 'point'
+
+        elif len(dict["coordinates"]) == 2:
+            for coordinate in dict["coordinates"]:
+                if 'start=' in coordinate:
+                    return 'polyhedron'
+            if geometry_type is None:
+                return 'linestring'
+
+        elif len(dict["coordinates"]) > 2:
+            if dict["upper_layer"]:
+                geometry_type = 'polyhedron'
+            else:
+                geometry_type = 'polygon'
+
+        return geometry_type
 
 
 class GeoExtractor:
@@ -164,7 +212,9 @@ class GeoExtractor:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
         geo_dict = {
-            'coordinates': [self.get_first_value('.//aixm:ARP//gml:pos')],
+            'type': self.feature_type,
+            'coordinates': [f"{self.get_first_value('.//aixm:ARP//gml:pos')} "
+                            f"{self.get_first_value('.//aixm:fieldElevation')}"],
             'elevation': self.get_first_value('.//aixm:fieldElevation'),
             'elevation_uom': self.get_first_value_attribute('.//aixm:fieldElevation', attribute_string='uom'),
             'name': f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})',
@@ -180,7 +230,9 @@ class GeoExtractor:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
         geo_dict = {
-            'coordinates': [self.get_first_value('.//aixm:location//gml:pos')],
+            'type': self.feature_type,
+            'coordinates': [f"{self.get_first_value('.//aixm:location//gml:pos')}"
+                            f" {self.get_first_value('.//aixm:location//aixm:elevation')}"],
             'elevation': self.get_first_value('.//aixm:location//aixm:elevation'),
             'elevation_uom': self.get_first_value_attribute('.//aixm:location//aixm:elevation',
                                                             attribute_string='uom'),
@@ -198,6 +250,7 @@ class GeoExtractor:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
         geo_dict = {
+            'type': self.feature_type,
             'coordinates': [self.get_first_value('.//aixm:location//gml:pos')]
         }
 
@@ -216,6 +269,7 @@ class GeoExtractor:
         coordinate_list = self.get_coordinate_list(root)
 
         geo_dict = {
+            'type': self.feature_type,
             'upper_layer': self.get_first_value('.//aixm:theAirspaceVolume//aixm:upperLimit'),
             'upper_layer_uom': self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:upperLimit',
                                                               attribute_string='uom'),
@@ -229,8 +283,12 @@ class GeoExtractor:
         return geo_dict
 
     def get_coordinate_list(self, root):
+        unpacked_gml = None
         for location in root:
-            unpacked_gml = self.unpack_gml(location.getchildren())
+            try:
+                unpacked_gml = self.unpack_gml(location.getchildren())
+            except TypeError:
+                print('Coordinates can only be extracted from an LXML etree._Element object.')
         return unpacked_gml
 
     def get_crs(self):
@@ -263,6 +321,7 @@ class GeoExtractor:
         coordinate_string = self.get_coordinate_list(root)
 
         geo_dict = {
+            'type': self.feature_type,
             'coordinates': coordinate_string
         }
 
