@@ -37,6 +37,7 @@ class GeoExtractor:
                            'xsi': "http://www.w3.org/2001/XMLSchema-instance"}
         self.timeslices = self.parse_timeslice()
         self.feature_type = self.get_feature_type()
+        self.properties = self.get_geo_info()
 
     def get_feature_type(self) -> str:
         try:
@@ -163,7 +164,7 @@ class GeoExtractor:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
         geo_dict = {
-            'coordinates': self.get_first_value('.//aixm:ARP//gml:pos'),
+            'coordinates': [self.get_first_value('.//aixm:ARP//gml:pos')],
             'elevation': self.get_first_value('.//aixm:fieldElevation'),
             'elevation_uom': self.get_first_value_attribute('.//aixm:fieldElevation', attribute_string='uom'),
             'name': f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})',
@@ -179,7 +180,7 @@ class GeoExtractor:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
         geo_dict = {
-            'coordinates': self.get_first_value('.//aixm:location//gml:pos'),
+            'coordinates': [self.get_first_value('.//aixm:location//gml:pos')],
             'elevation': self.get_first_value('.//aixm:location//aixm:elevation'),
             'elevation_uom': self.get_first_value_attribute('.//aixm:location//aixm:elevation',
                                                             attribute_string='uom'),
@@ -197,7 +198,7 @@ class GeoExtractor:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
         geo_dict = {
-            'coordinates': self.get_first_value('.//aixm:location//gml:pos')
+            'coordinates': [self.get_first_value('.//aixm:location//gml:pos')]
         }
 
         return geo_dict
@@ -212,10 +213,7 @@ class GeoExtractor:
         root = self.root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection//gml:segments',
                                  namespaces=self.namespaces)
 
-        coordinate_string = ''
-        for location in root:
-            unpacked_gml = self.unpack_gml(location.getchildren())
-            coordinate_string += unpacked_gml
+        coordinate_list = self.get_coordinate_list(root)
 
         geo_dict = {
             'upper_layer': self.get_first_value('.//aixm:theAirspaceVolume//aixm:upperLimit'),
@@ -225,10 +223,15 @@ class GeoExtractor:
             'lower_layer_uom': self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:lowerLimit',
                                                               attribute_string='uom'),
             'name': f"{self.get_first_value('.//aixm:designator')} {self.get_first_value('.//aixm:name')}",
-            'coordinate_string': coordinate_string
+            'coordinates': coordinate_list
         }
 
         return geo_dict
+
+    def get_coordinate_list(self, root):
+        for location in root:
+            unpacked_gml = self.unpack_gml(location.getchildren())
+        return unpacked_gml
 
     def get_crs(self):
         """
@@ -256,11 +259,8 @@ class GeoExtractor:
         Returns:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-        coordinate_string = ''
         root = self.root.findall('.//aixm:curveExtent//gml:segments', namespaces=self.namespaces)
-        for location in root:
-            next_coordinate = self.unpack_gml(location.getchildren())
-            coordinate_string += next_coordinate
+        coordinate_string = self.get_coordinate_list(root)
 
         geo_dict = {
             'coordinates': coordinate_string
@@ -268,7 +268,7 @@ class GeoExtractor:
 
         return geo_dict
 
-    def unpack_gml(self, location: etree.Element) -> str:
+    def unpack_gml(self, location: etree.Element) -> list[str]:
         """
         Args:
             location(etree.Element): etree.Element containing specific aixm tags containing geographic information
@@ -291,9 +291,7 @@ class GeoExtractor:
                 next_coordinate = self.unpack_arc(child)
                 coordinate_list.append(next_coordinate)
 
-        coordinate_string = ', '.join(coordinate_list)
-
-        return coordinate_string
+        return coordinate_list
 
     def unpack_arc(self, location: etree.Element) -> str:
         """

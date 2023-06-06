@@ -51,14 +51,18 @@ class TestGeoExtractor(TestCase):
         self.assertTrue(isinstance(self.ah.get_first_value_attribute('.//aixm:fieldElevation'), dict))
 
     def test_get_arp_coordinates(self):
-        self.assertEqual('59.5347278 -1.6285111 237.05 FT', self.ah.get_arp_coordinates())
+        self.assertEqual('59.5347278 -1.6285111 237.05 FT', f'{self.ah.properties["coordinates"]}'
+                                                            f' {self.ah.properties["elevation"]}'
+                                                            f' {self.ah.properties["elevation_uom"]}')
 
     def test_get_navaid_coordinates(self):
-        self.assertEqual('53.2814667 -0.9471639 115 FT', self.na.get_navaid_coordinates())
+        self.assertEqual('53.2814667 -0.9471639 115 FT', f'{self.na.properties["coordinates"]}'
+                                                         f' {self.na.properties["elevation"]}'
+                                                         f' {self.na.properties["elevation_uom"]}')
 
     def test_get_route_segment_coordinates(self):
         self.assertEqual('51.540220667 0.977041556, 51.531229778 0.388494583',
-                         self.route_segment.get_route_segment_coordinates())
+                         self.route_segment.properties["coordinates"])
 
     def test_determine_arc_direction(self):
         self.assertEqual('clockwise', self.airspace.determine_arc_direction(25, 200))
