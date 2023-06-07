@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from lxml import etree
 
-from aixm_geo.aixm_geo import AixmGeo, GeoExtractor
+from aixm_geo.aixm_geo import AixmGeo
 
 
 class TestAixmGeo(TestCase):
