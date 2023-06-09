@@ -1,5 +1,5 @@
 from typing import Union
-
+import aixm_geo.util as util
 from lxml import etree
 from pyproj import Geod
 
@@ -19,9 +19,9 @@ class SinglePointAixm:
         root (
     """
 
-    def __init__(self, root, timeslice):
+    def __init__(self, root):
         self._root = root
-        self._timeslice = timeslice
+        self._timeslice = util.parse_timeslice(self._root)
 
     def get_first_value(self, xpath: str, **kwargs: etree.Element) -> str:
         """Returns the first matching text value found within the subtree which match the Xpath provided.
@@ -105,8 +105,8 @@ class MultiPointAixm(SinglePointAixm):
     RouteSegment
     """
 
-    def __init__(self, root, timeslice):
-        super().__init__(root, timeslice)
+    def __init__(self, root):
+        super().__init__(root)
 
     def get_coordinate_list(self, subroot):
         unpacked_gml = None

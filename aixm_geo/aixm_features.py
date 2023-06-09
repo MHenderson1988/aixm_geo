@@ -4,8 +4,8 @@ from aixm_geo.settings import NAMESPACES
 
 
 class AirportHeliport(SinglePointAixm, IAixmFeature):
-    def __init__(self, root, timeslice):
-        super().__init__(root, timeslice)
+    def __init__(self, root):
+        super().__init__(root)
 
     def get_geographic_information(self):
         """
@@ -27,8 +27,8 @@ class AirportHeliport(SinglePointAixm, IAixmFeature):
 
 
 class NavaidComponent(SinglePointAixm, IAixmFeature):
-    def __init__(self, root, timeslice):
-        super().__init__(root, timeslice)
+    def __init__(self, root):
+        super().__init__(root)
 
     def get_geographic_information(self):
         """
@@ -52,8 +52,8 @@ class NavaidComponent(SinglePointAixm, IAixmFeature):
 
 
 class DesignatedPoint(SinglePointAixm, IAixmFeature):
-    def __init__(self, root, timeslice):
-        super().__init__(root, timeslice)
+    def __init__(self, root):
+        super().__init__(root)
 
     def get_geographic_information(self):
         """
@@ -71,8 +71,8 @@ class DesignatedPoint(SinglePointAixm, IAixmFeature):
 
 
 class RouteSegment(MultiPointAixm, IAixmFeature):
-    def __init__(self, root, timeslice):
-        super().__init__(root, timeslice)
+    def __init__(self, root):
+        super().__init__(root)
 
     def get_geographic_information(self) -> dict:
         """
@@ -96,8 +96,8 @@ class RouteSegment(MultiPointAixm, IAixmFeature):
 
 
 class Airspace(MultiPointAixm, IAixmFeature):
-    def __init__(self, root, timeslice):
-        super().__init__(root, timeslice)
+    def __init__(self, root):
+        super().__init__(root)
 
     def get_geographic_information(self):
         """

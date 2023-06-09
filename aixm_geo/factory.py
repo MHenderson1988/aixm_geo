@@ -37,18 +37,17 @@ class AixmFeatureFactory:
         aixm_features = self._root.findall('.//message:hasMember', NAMESPACES)
         aixm_feature_list = []
         for feature in aixm_features:
-            feature = self.produce(feature)
-            if feature:
-                aixm_feature_list.append(feature)
+            aixm_feature = self.produce(feature)
+            if aixm_feature:
+                aixm_feature_list.append(aixm_feature)
             else:
                 pass
         return aixm_feature_list
 
     def produce(self, subroot):
-        timeslice = util.parse_timeslice(subroot)
         feature_type = util.get_feature_type(subroot)
         try:
-            aixm_feature = self._feature_classes[feature_type](subroot, timeslice)
+            aixm_feature = self._feature_classes[feature_type](subroot)
         except KeyError:
             self.errors = f'aixm:{feature_type} is not a currently supported AIXMFeature type'
             aixm_feature = None
