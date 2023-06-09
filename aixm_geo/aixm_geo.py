@@ -1,30 +1,15 @@
 from pathlib import Path
-from typing import Union
-from kmlplus import kml
-from lxml import etree
 
-from aixm_geo.aixm_features import AixmFeature
+from kmlplus import kml
 
 
 class AixmGeo:
-    def __init__(self, root: Union[str, Path]):
-        self.root = etree.parse(root)
-        self.geo_info = self.extract_geo_info()
-
-    def find_aixm_features(self) -> list:
-        feature_list = self.root.findall('.//message:hasMember', {'message': "http://www.aixm.aero/schema/5.1/message"})
-        return feature_list
-
-    def extract_geo_info(self) -> list:
-        feature_list = self.find_aixm_features()
-        geo_info = [AixmFeature(x).parse_data() for x in feature_list]
-        return geo_info
 
     def build_kml(self, file_name, output_path):
         kml_obj = kml.KmlPlus(output=output_path, file_name=file_name)
-        self.draw_feature(kml_obj)
+        self.draw_features(kml_obj)
 
-    def draw_feature(self, kml_obj):
+    def draw_features(self, kml_obj):
         for aixm_feature_dict in self.geo_info:
             if aixm_feature_dict:
                 geometry_type = self.determine_geometry_type(aixm_feature_dict)
@@ -68,7 +53,6 @@ class AixmGeo:
                 geometry_type = 'polygon'
 
         return geometry_type
-
 
 
 if __name__ == '__main__':
