@@ -150,7 +150,7 @@ class MultiPointAixm(SinglePointAixm):
         Returns:
             coordinate_string(str): A coordinate string
         """
-        centre = self.get_first_value('.//gml:pos', subtree=location)
+        centre = self.get_centre(location)
         start_angle = self.get_first_value('.//gml:startAngle', subtree=location)
         end_angle = self.get_first_value('.//gml:endAngle', subtree=location)
         # Pyproj uses metres, we will have to convert for distance
@@ -173,6 +173,14 @@ class MultiPointAixm(SinglePointAixm):
                             f' direction={self.determine_arc_direction(float(start_angle), float(end_angle))}'
 
         return coordinate_string
+
+    def get_centre(self, location):
+        centre = self.get_first_value('.//gml:pos', subtree=location)
+        # If none, check for gml:posList instead
+        if centre == 'Unknown':
+            centre = self.get_first_value('.//gml:posList', subtree=location)
+
+        return centre
 
     def determine_arc_direction(self, start_angle: float, end_angle: float) -> str:
         """

@@ -7,7 +7,7 @@ from aixm_geo.settings import NAMESPACES
 
 class AixmFeatureFactory:
     def __init__(self, root):
-        self._root = root
+        self.root = root
         self._feature_classes = {
             'AirportHeliport': af.AirportHeliport,
             'DesignatedPoint': af.DesignatedPoint,
@@ -15,6 +15,7 @@ class AixmFeatureFactory:
             'RouteSegment': af.RouteSegment,
             'Airspace': af.Airspace
         }
+        self._errors = []
 
     @property
     def root(self):
@@ -22,23 +23,36 @@ class AixmFeatureFactory:
 
     @root.setter
     def root(self, root):
-        if isinstance(root, etree._Element):
-            self._root = root
-        else:
-            raise TypeError(f'Root can only accept type lxml etree.Element')
+        self._root = etree.parse(root)
+
+    @property
+    def errors(self):
+        return self._errors
+
+    @errors.setter
+    def errors(self, value):
+        self._errors.append(value)
 
     def get_feature_details(self):
         aixm_features = self._root.findall('.//message:hasMember', NAMESPACES)
+        aixm_feature_list = []
         for feature in aixm_features:
-            self.produce(feature)
+            feature = self.produce(feature)
+            if feature:
+                aixm_feature_list.append(feature)
+            else:
+                pass
+        return aixm_feature_list
 
     def produce(self, subroot):
-        timeslice = util.parse_timeslice()
+        timeslice = util.parse_timeslice(subroot)
         feature_type = util.get_feature_type(subroot)
         try:
-            aixm_feature = self._feature_classes[feature_type](subroot, timeslice). \
-                get_geographic_information()
+            aixm_feature = self._feature_classes[feature_type](subroot, timeslice)
         except KeyError:
-            print(f'aixm:{feature_type} is not a currently supported AIXMFeature type')
+            self.errors = f'aixm:{feature_type} is not a currently supported AIXMFeature type'
             aixm_feature = None
-        return aixm_feature
+        finally:
+            return aixm_feature
+
+

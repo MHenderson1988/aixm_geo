@@ -5,7 +5,8 @@ from aixm_geo.settings import NAMESPACES
 
 def get_feature_type(timeslices) -> str:
     try:
-        feature_type = timeslices[-1].find('.//', NAMESPACES).tag.split('}')[-1].split('T')[0]
+        feature_type = timeslices[-1].find('.', NAMESPACES).tag
+        feature_type = feature_type.split('}')[-1].split('T')[0]
     except IndexError:
         feature_type = "Unknown"
     return feature_type
@@ -26,7 +27,11 @@ def parse_timeslice(subroot) -> list:
         timeslices = None
     # Don't bother to sort if there is only one timeslice
     if len(timeslices) > 1:
-        timeslices.sort(key=lambda x: datetime.strptime(
-            x.find('.//{http://www.aixm.aero/schema/5.1}versionBegin').text.split('T')[0],
-            "%Y-%m-%d"))
+        try:
+            timeslices.sort(key=lambda x: datetime.strptime(
+                x.find('.//{http://www.aixm.aero/schema/5.1}versionBegin').text.split('T')[0],
+                "%Y-%m-%d"))
+        except AttributeError:
+            pass
     return timeslices
+
