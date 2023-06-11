@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Disclaimer: This sample data set is created by SIA (the French Aeronautical Information Service) and is only provided for evaluation purpose.
+This data set shall not be used for operational purpose. -->
+<message:AIXMBasicMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gsr="http://www.isotc211.org/2005/gsr" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:event="http://www.aixm.aero/schema/5.1/event" xmlns:aixm="http://www.aixm.aero/schema/5.1" xmlns:message="http://www.aixm.aero/schema/5.1/message" xsi:schemaLocation="http://www.aixm.aero/schema/5.1/message http://www.aixm.aero/schema/5.1/message/AIXM_BasicMessage.xsd" gml:id="MSG00001">
+	<message:hasMember>
+		<aixm:Airspace gml:id="uuid.ae72ffb2-43c1-4194-9ae6-2b220b285a72">
+			<gml:identifier codeSpace="urn:uuid:">ae72ffb2-43c1-4194-9ae6-2b220b285a72</gml:identifier>
+			<aixm:timeSlice>
+				<aixm:AirspaceTimeSlice gml:id="MID_13555652_ae72ffb2-43c1-4194-9ae6-2b220b285a72">
+					<gml:validTime>
+						<gml:TimePeriod gml:id="vt_13555652">
+							<gml:beginPosition>2021-01-28T00:00:00Z</gml:beginPosition>
+							<gml:endPosition indeterminatePosition="unknown"/>
+						</gml:TimePeriod>
+					</gml:validTime>
+					<aixm:interpretation>BASELINE</aixm:interpretation>
+					<aixm:sequenceNumber>1</aixm:sequenceNumber>
+					<aixm:correctionNumber>0</aixm:correctionNumber>
+					<aixm:type>R</aixm:type>
+					<aixm:designator>LFR278</aixm:designator>
+					<aixm:name>278</aixm:name>
+					<aixm:designatorICAO>NO</aixm:designatorICAO>
+					<aixm:class>
+						<aixm:AirspaceLayerClass gml:id="Ase_Class_13555652">
+							<aixm:associatedLevels>
+								<aixm:AirspaceLayer gml:id="Ase_Layer_13555652">
+									<aixm:upperLimit uom="FT">2500</aixm:upperLimit>
+									<aixm:upperLimitReference>MSL</aixm:upperLimitReference>
+									<aixm:lowerLimit uom="FT">0</aixm:lowerLimit>
+									<aixm:lowerLimitReference>SFC</aixm:lowerLimitReference>
+								</aixm:AirspaceLayer>
+							</aixm:associatedLevels>
+						</aixm:AirspaceLayerClass>
+					</aixm:class>
+					<aixm:geometryComponent>
+						<aixm:AirspaceGeometryComponent gml:id="Ase_Geom_13555652">
+							<aixm:theAirspaceVolume>
+								<aixm:AirspaceVolume gml:id="Ase_Volum_13555652">
+									<aixm:upperLimit uom="FT">2500</aixm:upperLimit>
+									<aixm:upperLimitReference>MSL</aixm:upperLimitReference>
+									<aixm:lowerLimit uom="FT">0</aixm:lowerLimit>
+									<aixm:lowerLimitReference>SFC</aixm:lowerLimitReference>
+									<aixm:horizontalProjection>
+										<aixm:Surface srsName="urn:ogc:def:crs:EPSG::4326" gml:id="Ase_Proj_13555652">
+											<gml:patches>
+												<gml:PolygonPatch>
+													<gml:exterior>
+														<gml:Ring>
+															<gml:curveMember>
+																<gml:Curve gml:id="Ase_Curv_13555652">
+																	<gml:segments>
+																		<gml:ArcByCenterPoint interpolation="circularArcCenterPointWithRadius" numArc="1">
+																			<gml:posList srsName="urn:ogc:def:crs:EPSG::4326">47.760555555555555 -3.44</gml:posList>
+																			<gml:radius uom="[nmi_i]">25</gml:radius>
+																			<gml:startAngle uom="deg">103.58701305955876</gml:startAngle>
+																			<gml:endAngle uom="deg">87.789758314610367</gml:endAngle>
+																		</gml:ArcByCenterPoint>
+																		<gml:GeodesicString interpolation="geodesic">
+																			<gml:posList srsName="urn:ogc:def:crs:EPSG::4326">47.775 -2.8205555555555555 47.778055555555554 -2.6925000000000003 47.74111111111111 -2.5686111111111107 47.677499999999995 -2.651944444444444 47.66083333333333 -2.838888888888889</gml:posList>
+																		</gml:GeodesicString>
+																	</gml:segments>
+																</gml:Curve>
+															</gml:curveMember>
+														</gml:Ring>
+													</gml:exterior>
+												</gml:PolygonPatch>
+											</gml:patches>
+										</aixm:Surface>
+									</aixm:horizontalProjection>
+								</aixm:AirspaceVolume>
+							</aixm:theAirspaceVolume>
+						</aixm:AirspaceGeometryComponent>
+					</aixm:geometryComponent>
+				</aixm:AirspaceTimeSlice>
+			</aixm:timeSlice>
+		</aixm:Airspace>
+	</message:hasMember>
+</message:AIXMBasicMessage>
