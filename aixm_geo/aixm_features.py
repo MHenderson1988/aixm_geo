@@ -1,6 +1,6 @@
-from aixm_geo.base import SinglePointAixm, MultiPointAixm
-from aixm_geo.interfaces import IAixmFeature
-from aixm_geo.settings import NAMESPACES
+from base import SinglePointAixm, MultiPointAixm
+from interfaces import IAixmFeature
+from settings import NAMESPACES
 
 
 class AirportHeliport(SinglePointAixm, IAixmFeature):
@@ -14,13 +14,15 @@ class AirportHeliport(SinglePointAixm, IAixmFeature):
         Returns:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
+
+        elevation, elevation_uom = self.get_elevation()
         geo_dict = {
             'type': 'AirportHeliport',
             'coordinates': [f"{self.get_first_value('.//aixm:ARP//gml:pos')} "
-                            f"{self.get_first_value('.//aixm:fieldElevation')}"],
-            'elevation': self.get_first_value('.//aixm:fieldElevation'),
-            'elevation_uom': self.get_first_value_attribute('.//aixm:fieldElevation', attribute_string='uom'),
-            'name': f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})',
+                            f"{elevation}"],
+            'elevation': elevation,
+            'elevation_uom': elevation_uom,
+            'name': f'{self.get_first_value(".//aixm:designator")} ({self.get_first_value(".//aixm:name")})',
         }
 
         return geo_dict
@@ -37,13 +39,14 @@ class NavaidComponent(SinglePointAixm, IAixmFeature):
         Returns:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
+        elevation, elevation_uom = self.get_elevation()
+
         geo_dict = {
             'type': 'NavaidComponent',
             'coordinates': [f"{self.get_first_value('.//aixm:location//gml:pos')}"
-                            f" {self.get_first_value('.//aixm:location//aixm:elevation')}"],
-            'elevation': self.get_first_value('.//aixm:location//aixm:elevation'),
-            'elevation_uom': self.get_first_value_attribute('.//aixm:location//aixm:elevation',
-                                                            attribute_string='uom'),
+                            f" {elevation}"],
+            'elevation': elevation,
+            'elevation_uom': elevation_uom,
             'name': f'{self.get_first_value(".//aixm:designator")}({self.get_first_value(".//aixm:name")})' \
                     f' {self.get_first_value(".//aixm:type")}'
         }
@@ -64,6 +67,7 @@ class DesignatedPoint(SinglePointAixm, IAixmFeature):
         """
         geo_dict = {
             'type': 'DesignatedPoint',
+            'name': self.get_first_value('.//aixm:name'),
             'coordinates': [self.get_first_value('.//aixm:location//gml:pos')]
         }
 
@@ -106,21 +110,21 @@ class Airspace(MultiPointAixm, IAixmFeature):
         Returns:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-        subroot = self._root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection//gml:segments',
+        subroot = self._root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection',
                                      namespaces=NAMESPACES)
 
         coordinate_list = self.get_coordinate_list(subroot)
 
+        lower_layer, lower_layer_uom, upper_layer, upper_layer_uom = self.get_elevation()
+
         geo_dict = {
             'type': 'Airspace',
-            'upper_layer': self.get_first_value('.//aixm:theAirspaceVolume//aixm:upperLimit'),
-            'upper_layer_uom': self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:upperLimit',
-                                                              attribute_string='uom'),
-            'lower_layer': self.get_first_value('.//aixm:theAirspaceVolume//aixm:lowerLimit'),
-            'lower_layer_uom': self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:lowerLimit',
-                                                              attribute_string='uom'),
+            'upper_layer': upper_layer,
+            'upper_layer_uom': upper_layer_uom,
+            'lower_layer': lower_layer,
+            'lower_layer_uom': lower_layer_uom,
             'name': f"{self.get_first_value('.//aixm:designator')} {self.get_first_value('.//aixm:name')}",
-            'coordinates': coordinate_list
+            'coordinates': coordinate_list,
         }
 
         return geo_dict

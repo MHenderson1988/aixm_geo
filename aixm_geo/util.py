@@ -1,9 +1,20 @@
 from datetime import datetime
 
-from aixm_geo.settings import NAMESPACES
+from lxml.etree import _Element
+
+from settings import NAMESPACES
 
 
-def get_feature_type(timeslices) -> str:
+def get_feature_type(timeslices: list) -> str:
+    """
+    Returns the type of AIXM feature from the most recent timeslice
+
+    Args:
+        timeslices (list): A list of one or more AIXM timeslice
+
+    Returns:
+         feature_type (str): The AIXM feature type.
+    """
     try:
         feature_type = timeslices[-1].find('.', NAMESPACES).tag
         feature_type = feature_type.split('}')[-1].split('T')[0]
@@ -12,7 +23,7 @@ def get_feature_type(timeslices) -> str:
     return feature_type
 
 
-def parse_timeslice(subroot) -> list:
+def parse_timeslice(subroot: _Element) -> list:
     """Looks at the timeslices contained within the feature and arranges them in time order (oldest to newest).
 
     Returns:
@@ -35,3 +46,30 @@ def parse_timeslice(subroot) -> list:
             pass
     return timeslices
 
+
+def determine_geometry_type(aixm_feature_dict):
+    geometry_type = None
+    if aixm_feature_dict['type'] == 'RouteSegment':
+        geometry_type = 'LineString'
+
+    elif len(aixm_feature_dict["coordinates"]) == 1:
+        if 'radius=' in aixm_feature_dict['coordinates'][0]:
+            if aixm_feature_dict["upper_layer"]:
+                geometry_type = 'cylinder'
+        else:
+            geometry_type = 'point'
+
+    elif len(aixm_feature_dict["coordinates"]) == 2:
+        for coordinate in aixm_feature_dict["coordinates"]:
+            if 'start=' in coordinate:
+                return 'polyhedron'
+        if geometry_type is None:
+            return 'linestring'
+
+    elif len(aixm_feature_dict["coordinates"]) > 2:
+        if aixm_feature_dict["upper_layer"]:
+            geometry_type = 'polyhedron'
+        else:
+            geometry_type = 'polygon'
+
+    return geometry_type
