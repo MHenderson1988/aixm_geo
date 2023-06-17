@@ -33,8 +33,8 @@ class AixmGeo:
                                            altitude_mode='absolute')
                     else:
                         kml_obj.polyhedron(aixm_feature_dict["coordinates"],
-                                           upper_layer=aixm_feature_dict['upper_layer'],
-                                           lower_layer=aixm_feature_dict['lower_layer'],
+                                           upper_layer=float(aixm_feature_dict['upper_layer']),
+                                           lower_layer=float(aixm_feature_dict['lower_layer']),
                                            lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
                                            upper_layer_uom=aixm_feature_dict['upper_layer_uom'],
                                            uom=aixm_feature_dict['lower_layer_uom'], fol=aixm_feature_dict['name'])
@@ -55,15 +55,15 @@ class AixmGeo:
 
         if uom == 'FL':
             uom = 'FT'
-            kml_obj.cylinder(coordinates, radius,
-                             radius_uom=radius_uom, lower_layer=float(lower_layer) * 100,
-                             upper_layer=float(upper_layer * 100), uom=uom,
+            kml_obj.cylinder(coordinates, float(radius),
+                             radius_uom=radius_uom, lower_layer=float(lower_layer),
+                             upper_layer=float(upper_layer), uom=uom,
                              fol=aixm_feature_dict['name'], lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
                              upper_layer_uom=aixm_feature_dict['upper_layer_uom'], altitude_mode='absolute')
         else:
-            kml_obj.cylinder(coordinates, radius,
-                             radius_uom=radius_uom, lower_layer=lower_layer, upper_layer=upper_layer, uom=uom,
-                             lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
+            kml_obj.cylinder(coordinates, float(radius),
+                             radius_uom=radius_uom, lower_layer=float(lower_layer), upper_layer=float(upper_layer),
+                             uom=uom, lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
                              upper_layer_uom=aixm_feature_dict['upper_layer_uom'],
                              fol=aixm_feature_dict['name'])
 

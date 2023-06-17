@@ -85,15 +85,16 @@ class RouteSegment(MultiPointAixm, IAixmFeature):
         Returns:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-        coordinate_string = ''
-        root = self._root.findall('.//aixm:curveExtent//gml:segments', namespaces=NAMESPACES)
+        coordinate_list = []
+        root = self._root.iterfind('.//aixm:curveExtent', namespaces=NAMESPACES)
         for location in root:
-            next_coordinate = self.unpack_gml(location.getchildren())
-            coordinate_string = ', '.join(next_coordinate)
+            for x in self.extract_pos_and_poslist(location):
+                coordinate_list.append(x)
 
         geo_dict = {
             'type': 'RouteSegment',
-            'coordinates': coordinate_string
+            'coordinates': coordinate_list,
+            # TODO add name for route segments
         }
 
         return geo_dict

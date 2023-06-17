@@ -1,3 +1,4 @@
+import re
 from typing import Union
 
 from lxml import etree
@@ -159,32 +160,38 @@ class MultiPointAixm(SinglePointAixm):
         coordinate_list = []
         for child in location:
             tag = child.tag.split('}')[-1]
-            if tag == 'CircleByCenterPoint':
-                next_coordinate = self.unpack_circle(child)
-                coordinate_list.append(next_coordinate)
-            elif tag == 'Ring':
-                pos_iter = child.iterfind('.//gml:posList', namespaces=NAMESPACES)
-                for posList in pos_iter:
-                    string_list = self.process_geodesic_string(posList.text)
-                    coordinate_list.extend(string_list)
-            elif tag == 'LineStringSegment':
-                points = child.findall('.//gml:pointProperty', namespaces=NAMESPACES)
-                for point in points:
-                    next_coordinate = self.unpack_linestring(point)
-                    coordinate_list.append(next_coordinate)
-            elif tag == 'ArcByCenterPoint':
-                next_coordinate = self.unpack_arc(child)
-                coordinate_list.append(next_coordinate)
-
+            if tag == 'Ring' or tag == 'LineStringSegment':
+                for x in self.extract_pos_and_poslist(child):
+                    coordinate_list.append(x)
         return coordinate_list
 
-    def unpack_curve(self, location):
-        coordinate_string = ""
-        for child in location.findall('.//gml:curveMember', namespaces=NAMESPACES):
-            coordinate_string += child.find('.//gml:posList', namespaces=NAMESPACES).text
-        return coordinate_string
+    def extract_pos_and_poslist(self, location):
+        """
+        Args:
+            self
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
+        for child in location.iterdescendants():
+            tag = child.tag.split('}')[-1]
+            if tag == 'GeodesicString':
+                for x in self.unpack_geodesic_string(child):
+                    yield x
+            elif tag == 'CircleByCenterPoint':
+                yield self.unpack_circle(child)
+            elif tag == 'ArcByCenterPoint':
+                yield self.unpack_arc(child)
 
-    def process_geodesic_string(self, string_to_manipulate):
+    def unpack_geodesic_string(self, location):
+        for child in location.iterdescendants():
+            tag = child.tag.split('}')[-1]
+            if tag == 'pos':
+                yield child.text
+            elif tag == 'posList':
+                for x in self.unpack_pos_list(child.text):
+                    yield x
+
+    def unpack_pos_list(self, string_to_manipulate):
         split = string_to_manipulate.split(' ')
         coordinate_list = []
         if len(split) > 2:
@@ -192,11 +199,9 @@ class MultiPointAixm(SinglePointAixm):
             for i in range(len(split)):
                 if i < len(split) and i % 2 == 0 and i != 0:
                     new_string = f'{split[i]} {split[i + 1]}'
-                    coordinate_list.append(new_string)
+                    yield new_string
         else:
-            coordinate_list.append(string_to_manipulate)
-
-        return coordinate_list
+            yield string_to_manipulate
 
     def unpack_arc(self, location: etree.Element) -> str:
         """
