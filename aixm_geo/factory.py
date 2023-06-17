@@ -1,11 +1,13 @@
 from lxml import etree
 
-import aixm_geo.aixm_features as af
-import aixm_geo.util as util
-from aixm_geo.settings import NAMESPACES
+import aixm_features as af
+import util as util
+from settings import NAMESPACES
 
 
 class AixmFeatureFactory:
+    __slots__ = ["_root", '_feature_classes', '_errors']
+
     def __init__(self, root):
         self.root = root
         self._feature_classes = {
@@ -16,6 +18,9 @@ class AixmFeatureFactory:
             'Airspace': af.Airspace
         }
         self._errors = []
+
+    def __iter__(self):
+        return self.get_feature_details()
 
     @property
     def root(self):
@@ -34,15 +39,13 @@ class AixmFeatureFactory:
         self._errors.append(value)
 
     def get_feature_details(self):
-        aixm_features = self._root.findall('.//message:hasMember', NAMESPACES)
-        aixm_feature_list = []
+        aixm_features = self._root.iterfind('.//message:hasMember', NAMESPACES)
         for feature in aixm_features:
             aixm_feature = self.produce(feature)
             if aixm_feature:
-                aixm_feature_list.append(aixm_feature)
+                yield aixm_feature
             else:
                 pass
-        return aixm_feature_list
 
     def produce(self, subroot):
         feature_type = util.get_feature_type(subroot)
@@ -53,5 +56,3 @@ class AixmFeatureFactory:
             aixm_feature = None
         finally:
             return aixm_feature
-
-

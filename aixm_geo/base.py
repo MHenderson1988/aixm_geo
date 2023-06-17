@@ -1,9 +1,11 @@
+import re
 from typing import Union
-import aixm_geo.util as util
+
 from lxml import etree
 from pyproj import Geod
 
-from aixm_geo.settings import NAMESPACES
+import util as util
+from settings import NAMESPACES
 
 
 class SinglePointAixm:
@@ -20,6 +22,7 @@ class SinglePointAixm:
     """
 
     def __init__(self, root):
+        __slots__ = ['_root', '_timeslice']
         self._root = root
         self._timeslice = util.parse_timeslice(self._root)
 
@@ -93,6 +96,35 @@ class SinglePointAixm:
 
         return attribute
 
+    def get_elevation(self):
+        elevation = self.get_first_value('.//aixm:fieldElevation')
+        elevation_uom = self.get_first_value_attribute('.//aixm:fieldElevation', attribute_string='uom')
+
+        if elevation == 'Unknown':
+            elevation = 0
+            elevation_uom = 'FT'
+
+        return elevation, elevation_uom
+
+    def get_crs(self):
+        """
+        Args:
+            self
+        Returns:
+            crs(str): A string of 'Anticlockwise' or 'Clockwise' depending upon the CRS
+            applied and the start and end angles
+        """
+        crs = self.get_first_value_attribute('.//aixm:Surface', attribute_string='srsName')
+        split = crs.split(':')[-1]
+        if split == '4326':
+            crs = '4326'
+        elif split == 'CRS84':
+            crs = 'CRS84'
+        else:
+            raise TypeError(print('Only CRS84 and ESPG::4326 supported.'))
+
+        return crs
+
 
 class MultiPointAixm(SinglePointAixm):
     """
@@ -112,7 +144,7 @@ class MultiPointAixm(SinglePointAixm):
         unpacked_gml = None
         for location in subroot:
             try:
-                unpacked_gml = self.unpack_gml(location.getchildren())
+                unpacked_gml = self.unpack_gml(location.iterdescendants())
             except TypeError:
                 print('Coordinates can only be extracted from an LXML etree._Element object.')
         return unpacked_gml
@@ -128,19 +160,48 @@ class MultiPointAixm(SinglePointAixm):
         coordinate_list = []
         for child in location:
             tag = child.tag.split('}')[-1]
-            if tag == 'CircleByCenterPoint':
-                next_coordinate = self.unpack_circle(child)
-                coordinate_list.append(next_coordinate)
-            elif tag == 'GeodesicString' or tag == 'LineStringSegment':
-                points = child.findall('.//gml:pointProperty', namespaces=NAMESPACES)
-                for point in points:
-                    next_coordinate = self.unpack_geodesic_string(point)
-                    coordinate_list.append(next_coordinate)
-            elif tag == 'ArcByCenterPoint':
-                next_coordinate = self.unpack_arc(child)
-                coordinate_list.append(next_coordinate)
-
+            if tag == 'Ring' or tag == 'LineStringSegment':
+                for x in self.extract_pos_and_poslist(child):
+                    coordinate_list.append(x)
         return coordinate_list
+
+    def extract_pos_and_poslist(self, location):
+        """
+        Args:
+            self
+        Returns:
+            coordinate_string(str): A coordinate string
+        """
+        for child in location.iterdescendants():
+            tag = child.tag.split('}')[-1]
+            if tag == 'GeodesicString':
+                for x in self.unpack_geodesic_string(child):
+                    yield x
+            elif tag == 'CircleByCenterPoint':
+                yield self.unpack_circle(child)
+            elif tag == 'ArcByCenterPoint':
+                yield self.unpack_arc(child)
+
+    def unpack_geodesic_string(self, location):
+        for child in location.iterdescendants():
+            tag = child.tag.split('}')[-1]
+            if tag == 'pos':
+                yield child.text
+            elif tag == 'posList':
+                for x in self.unpack_pos_list(child.text):
+                    yield x
+
+    def unpack_pos_list(self, string_to_manipulate):
+        split = string_to_manipulate.split(' ')
+        coordinate_list = []
+        if len(split) > 2:
+            coordinate_list.append(f'{split[0]} {split[1]}')
+            for i in range(len(split)):
+                if i < len(split) and i % 2 == 0 and i != 0:
+                    new_string = f'{split[i]} {split[i + 1]}'
+                    yield new_string
+        else:
+            yield string_to_manipulate
 
     def unpack_arc(self, location: etree.Element) -> str:
         """
@@ -150,16 +211,16 @@ class MultiPointAixm(SinglePointAixm):
         Returns:
             coordinate_string(str): A coordinate string
         """
-        centre = self.get_centre(location)
+        centre = self.get_centre(location).strip()
         start_angle = self.get_first_value('.//gml:startAngle', subtree=location)
         end_angle = self.get_first_value('.//gml:endAngle', subtree=location)
         # Pyproj uses metres, we will have to convert for distance
         radius = self.get_first_value('.//gml:radius', subtree=location)
         radius_uom = self.get_first_value_attribute('.//gml:radius', subtree=location, attribute_string='uom')
 
-        conversion_dict = {'FT': 0.3048, '[nmi_i]': 1852, 'MI': 1609.4, 'KM': 1000}
+        conversion_dict = {'ft': 0.3048, '[nmi_i]': 1852, 'mi': 1609.4, 'km': 1000}
 
-        if radius_uom != 'M':
+        if radius_uom != 'm':
             radius = float(radius) * conversion_dict[radius_uom]
 
         lat = centre.split(' ')[0]
@@ -176,6 +237,7 @@ class MultiPointAixm(SinglePointAixm):
 
     def get_centre(self, location):
         centre = self.get_first_value('.//gml:pos', subtree=location)
+
         # If none, check for gml:posList instead
         if centre == 'Unknown':
             centre = self.get_first_value('.//gml:posList', subtree=location)
@@ -207,7 +269,7 @@ class MultiPointAixm(SinglePointAixm):
 
         return direction
 
-    def unpack_geodesic_string(self, location: etree.Element) -> str:
+    def unpack_linestring(self, location: etree.Element) -> str:
         """
         Args:
             location(etree.Element): etree.Element containing specific aixm tags containing geographic information
@@ -216,6 +278,8 @@ class MultiPointAixm(SinglePointAixm):
         """
 
         coordinate_string = self.get_first_value('.//aixm:Point//gml:pos', subtree=location)
+        if coordinate_string == 'Unknown':
+            coordinate_string = self.get_first_value('.//aixm:Point//gml:posList', subtree=location)
 
         return coordinate_string
 
@@ -226,29 +290,27 @@ class MultiPointAixm(SinglePointAixm):
             Returns:
                 coordinate_string(str): A coordinate string
         """
-        centre = self.get_first_value('.//gml:pos', subtree=location)
+        centre = self.get_centre(location)
         radius = self.get_first_value('.//gml:radius', subtree=location)
         radius_uom = self.get_first_value_attribute('.//gml:radius', subtree=location, attribute_string='uom')
 
-        coordinate_string = f'{centre}, {radius} {radius_uom}'
+        coordinate_string = f'{centre}, radius={radius}, radius_uom={radius_uom}'
 
         return coordinate_string
 
-    def get_crs(self):
-        """
-        Args:
-            self
-        Returns:
-            crs(str): A string of 'Anticlockwise' or 'Clockwise' depending upon the CRS
-            applied and the start and end angles
-        """
-        crs = self.get_first_value_attribute('.//aixm:Surface', attribute_string='srsName')
-        split = crs.split(':')[-1]
-        if split == '4326':
-            crs = '4326'
-        elif split == 'CRS84':
-            crs = 'CRS84'
-        else:
-            raise TypeError(print('Only CRS84 and ESPG::4326 supported.'))
+    def get_elevation(self):
+        lower_layer = self.get_first_value('.//aixm:theAirspaceVolume//aixm:lowerLimit')
+        lower_layer_uom = self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:lowerLimit',
+                                                         attribute_string='uom')
+        upper_layer = self.get_first_value('.//aixm:theAirspaceVolume//aixm:upperLimit')
+        upper_layer_uom = self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:upperLimit',
+                                                         attribute_string='uom')
 
-        return crs
+        if lower_layer == 'Unknown':
+            lower_layer = 0
+            lower_layer_uom = 'FT'
+        if upper_layer == 'Unknown':
+            upper_layer = 0
+            upper_layer_uom = 'FT'
+
+        return lower_layer, lower_layer_uom, upper_layer, upper_layer_uom

@@ -3,12 +3,12 @@
 This data set shall not be used for operational purpose. -->
 <message:AIXMBasicMessage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gsr="http://www.isotc211.org/2005/gsr" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:event="http://www.aixm.aero/schema/5.1/event" xmlns:aixm="http://www.aixm.aero/schema/5.1" xmlns:message="http://www.aixm.aero/schema/5.1/message" xsi:schemaLocation="http://www.aixm.aero/schema/5.1/message http://www.aixm.aero/schema/5.1/message/AIXM_BasicMessage.xsd" gml:id="MSG00001">
 	<message:hasMember>
-		<aixm:Airspace gml:id="uuid.ae72ffb2-43c1-4194-9ae6-2b220b285a72">
-			<gml:identifier codeSpace="urn:uuid:">ae72ffb2-43c1-4194-9ae6-2b220b285a72</gml:identifier>
+		<aixm:Airspace gml:id="uuid.c2ec3780-c1be-400c-8f66-66bfcb033476">
+			<gml:identifier codeSpace="urn:uuid:">c2ec3780-c1be-400c-8f66-66bfcb033476</gml:identifier>
 			<aixm:timeSlice>
-				<aixm:AirspaceTimeSlice gml:id="MID_13555652_ae72ffb2-43c1-4194-9ae6-2b220b285a72">
+				<aixm:AirspaceTimeSlice gml:id="MID_1566705_c2ec3780-c1be-400c-8f66-66bfcb033476">
 					<gml:validTime>
-						<gml:TimePeriod gml:id="vt_13555652">
+						<gml:TimePeriod gml:id="vt_1566705">
 							<gml:beginPosition>2021-01-28T00:00:00Z</gml:beginPosition>
 							<gml:endPosition indeterminatePosition="unknown"/>
 						</gml:TimePeriod>
@@ -16,47 +16,51 @@ This data set shall not be used for operational purpose. -->
 					<aixm:interpretation>BASELINE</aixm:interpretation>
 					<aixm:sequenceNumber>1</aixm:sequenceNumber>
 					<aixm:correctionNumber>0</aixm:correctionNumber>
-					<aixm:type>R</aixm:type>
-					<aixm:designator>LFR278</aixm:designator>
-					<aixm:name>278</aixm:name>
+					<aixm:type>SECTOR</aixm:type>
+					<aixm:designator>LFMMB1</aixm:designator>
+					<aixm:name>B1</aixm:name>
 					<aixm:designatorICAO>NO</aixm:designatorICAO>
 					<aixm:class>
-						<aixm:AirspaceLayerClass gml:id="Ase_Class_13555652">
+						<aixm:AirspaceLayerClass gml:id="Ase_Class_1566705">
 							<aixm:associatedLevels>
-								<aixm:AirspaceLayer gml:id="Ase_Layer_13555652">
-									<aixm:upperLimit uom="FT">2500</aixm:upperLimit>
-									<aixm:upperLimitReference>MSL</aixm:upperLimitReference>
-									<aixm:lowerLimit uom="FT">0</aixm:lowerLimit>
-									<aixm:lowerLimitReference>SFC</aixm:lowerLimitReference>
+								<aixm:AirspaceLayer gml:id="Ase_Layer_1566705">
+									<aixm:upperLimit uom="FL">305</aixm:upperLimit>
+									<aixm:upperLimitReference>STD</aixm:upperLimitReference>
+									<aixm:lowerLimit uom="FL">245</aixm:lowerLimit>
+									<aixm:lowerLimitReference>STD</aixm:lowerLimitReference>
 								</aixm:AirspaceLayer>
 							</aixm:associatedLevels>
 						</aixm:AirspaceLayerClass>
 					</aixm:class>
 					<aixm:geometryComponent>
-						<aixm:AirspaceGeometryComponent gml:id="Ase_Geom_13555652">
+						<aixm:AirspaceGeometryComponent gml:id="Ase_Geom_1566705">
 							<aixm:theAirspaceVolume>
-								<aixm:AirspaceVolume gml:id="Ase_Volum_13555652">
-									<aixm:upperLimit uom="FT">2500</aixm:upperLimit>
-									<aixm:upperLimitReference>MSL</aixm:upperLimitReference>
-									<aixm:lowerLimit uom="FT">0</aixm:lowerLimit>
-									<aixm:lowerLimitReference>SFC</aixm:lowerLimitReference>
+								<aixm:AirspaceVolume gml:id="Ase_Volum_1566705">
+									<aixm:upperLimit uom="FL">305</aixm:upperLimit>
+									<aixm:upperLimitReference>STD</aixm:upperLimitReference>
+									<aixm:lowerLimit uom="FL">245</aixm:lowerLimit>
+									<aixm:lowerLimitReference>STD</aixm:lowerLimitReference>
 									<aixm:horizontalProjection>
-										<aixm:Surface srsName="urn:ogc:def:crs:EPSG::4326" gml:id="Ase_Proj_13555652">
+										<aixm:Surface srsName="urn:ogc:def:crs:EPSG::4326" gml:id="Ase_Proj_1566705">
 											<gml:patches>
 												<gml:PolygonPatch>
 													<gml:exterior>
 														<gml:Ring>
 															<gml:curveMember>
-																<gml:Curve gml:id="Ase_Curv_13555652">
+																<gml:Curve gml:id="Ase_Curv_1566705_9671">
 																	<gml:segments>
-																		<gml:ArcByCenterPoint interpolation="circularArcCenterPointWithRadius" numArc="1">
-																			<gml:posList srsName="urn:ogc:def:crs:EPSG::4326">47.760555555555555 -3.44</gml:posList>
-																			<gml:radius uom="[nmi_i]">25</gml:radius>
-																			<gml:startAngle uom="deg">103.58701305955876</gml:startAngle>
-																			<gml:endAngle uom="deg">87.789758314610367</gml:endAngle>
-																		</gml:ArcByCenterPoint>
 																		<gml:GeodesicString interpolation="geodesic">
-																			<gml:posList srsName="urn:ogc:def:crs:EPSG::4326">47.775 -2.8205555555555555 47.778055555555554 -2.6925000000000003 47.74111111111111 -2.5686111111111107 47.677499999999995 -2.651944444444444 47.66083333333333 -2.838888888888889</gml:posList>
+																			<gml:posList srsName="urn:ogc:def:crs:EPSG::4326">44.99027777777778 6.6625000000000005 44.8 6.766666666666667 44.8 7.0125 44.81388888888888 7.128055555555555 44.143055555555556 7.285277777777778</gml:posList>
+																		</gml:GeodesicString>
+																	</gml:segments>
+																</gml:Curve>
+															</gml:curveMember>
+															<gml:curveMember xlink:href="#uuid.a6cd609d-9c2c-404d-bfbf-53c0e3f93610" xlink:title="along the geographical [ STATE : FRANCE_ITALY ] border"/>
+															<gml:curveMember>
+																<gml:Curve gml:id="Ase_Curv_1566705_9676">
+																	<gml:segments>
+																		<gml:GeodesicString interpolation="geodesic">
+																			<gml:posList srsName="urn:ogc:def:crs:EPSG::4326">44.06111111111111 7.712777777777778 44.02305555555555 7.751944444444445 44 7.666666666666667 43.475 6.741666666666667 43.425 6.191666666666667 43.4 5.916666666666667 43.475 5.925000000000001 43.84166666666667 5.9750000000000005 43.94333333333333 6.029722222222222 44.36527777777778 6.285 44.99027777777778 6.6625000000000005</gml:posList>
 																		</gml:GeodesicString>
 																	</gml:segments>
 																</gml:Curve>
