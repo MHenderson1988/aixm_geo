@@ -1,6 +1,6 @@
-from base import SinglePointAixm, MultiPointAixm
-from interfaces import IAixmFeature
-from settings import NAMESPACES
+from aixm_geo.base import SinglePointAixm, MultiPointAixm
+from aixm_geo.interfaces import IAixmFeature
+from aixm_geo.settings import NAMESPACES
 
 
 class AirportHeliport(SinglePointAixm, IAixmFeature):
