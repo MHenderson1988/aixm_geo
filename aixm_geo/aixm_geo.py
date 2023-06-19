@@ -3,6 +3,7 @@ from pathlib import Path
 from kmlplus import kml
 
 import util
+from factory import AixmFeatureFactory
 
 
 class AixmGeo:

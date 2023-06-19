@@ -1,4 +1,3 @@
-import re
 from typing import Union
 
 from lxml import etree
