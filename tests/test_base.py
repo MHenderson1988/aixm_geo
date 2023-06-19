@@ -15,6 +15,7 @@ class TestSinglePointAixm(TestCase):
         name = self.ah.get_first_value('.//aixm:name')
         self.assertEqual('SAINT ETIENNE MALACUSSY', name)
         self.assertNotEqual('RANDOM AIRPORT NAME', name)
+        self.assertTrue(isinstance(name, str))
 
     def test_get_first_value_attribute(self):
         attribute = self.ah.get_first_value_attribute('.//gml:endPosition', attribute_string='indeterminatePosition')

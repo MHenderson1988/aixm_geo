@@ -47,6 +47,24 @@ def parse_timeslice(subroot: _Element) -> list:
     return timeslices
 
 
+def convert_fl_to_feet(aixm_feature_dict):
+    if aixm_feature_dict['lower_layer_uom'] == 'FL':
+        aixm_feature_dict['lower_layer_uom'] = 'FT'
+        aixm_feature_dict['lower_layer'] = float(aixm_feature_dict['lower_layer']) * 100
+
+    if aixm_feature_dict['upper_layer_uom'] == 'FL':
+        aixm_feature_dict['upper_layer_uom'] = 'FT'
+        aixm_feature_dict['upper_layer'] = float(aixm_feature_dict['upper_layer']) * 100
+
+    return aixm_feature_dict
+
+
+def switch_radius_uom(radius_uom):
+    if radius_uom == '[nmi_i]':
+        radius_uom = 'NM'
+    return radius_uom
+
+
 def determine_geometry_type(aixm_feature_dict):
     geometry_type = None
     if aixm_feature_dict['type'] == 'RouteSegment':

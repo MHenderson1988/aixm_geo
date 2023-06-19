@@ -16,9 +16,6 @@ class SinglePointAixm:
 
     AirportHeliport - Geographic information is a single point (ARP)
     DesignatedPoint - A single geographic point
-
-    Args:
-        root (
     """
 
     def __init__(self, root):
