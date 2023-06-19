@@ -61,8 +61,6 @@ class AixmGeo:
 
 
 if __name__ == '__main__':
-    from factory import AixmFeatureFactory
-
     file_loc = Path().absolute().joinpath('..', Path('test_data/test_airspace.xml'))
     output = Path().absolute()
     AixmGeo(file_loc, output, 'test_kml.kml').build_kml()
