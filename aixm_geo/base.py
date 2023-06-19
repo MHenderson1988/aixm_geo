@@ -4,7 +4,7 @@ from lxml import etree
 from pyproj import Geod
 
 import aixm_geo.util as util
-from settings import NAMESPACES
+from aixm_geo.settings import NAMESPACES
 
 
 class SinglePointAixm:
