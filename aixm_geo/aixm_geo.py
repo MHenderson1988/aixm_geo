@@ -2,8 +2,8 @@ from pathlib import Path
 
 from kmlplus import kml
 
-import util
-from factory import AixmFeatureFactory
+import aixm_geo.util as util
+from aixm_geo.factory import AixmFeatureFactory
 
 
 class AixmGeo:

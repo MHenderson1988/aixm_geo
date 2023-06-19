@@ -1,8 +1,8 @@
 from lxml import etree
 
-import aixm_features as af
-import util as util
-from settings import NAMESPACES
+import aixm_geo.aixm_features as af
+import aixm_geo.util as util
+from aixm_geo.settings import NAMESPACES
 
 
 class AixmFeatureFactory:

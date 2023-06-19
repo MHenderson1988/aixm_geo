@@ -2,7 +2,7 @@ from datetime import datetime
 
 from lxml.etree import _Element
 
-from settings import NAMESPACES
+from aixm_geo.settings import NAMESPACES
 
 
 def get_feature_type(timeslices: list) -> str:
