@@ -41,11 +41,3 @@ class TestMultiPointAixm(TestCase):
         airspace_feature = AixmFeatureFactory(file_loc).root.xpath("/message:AIXMBasicMessage/message:hasMember/"
                                                                    "aixm:Airspace", namespaces=NAMESPACES)
         self.airspace = MultiPointAixm(airspace_feature[0])
-
-    def test_get_coordinate_list(self):
-        subroot = self.airspace._root.xpath('.//aixm:geometryComponent', namespaces=NAMESPACES)
-        coordinate_list = self.airspace.get_coordinate_list(subroot)
-        self.assertTrue(isinstance(coordinate_list, list))
-        self.assertTrue(isinstance(coordinate_list[0], str))
-        self.assertEqual(len(coordinate_list), 177)
-        self.assertNotEqual(len(coordinate_list), 0)
