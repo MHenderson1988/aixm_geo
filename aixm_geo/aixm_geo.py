@@ -45,13 +45,7 @@ class AixmGeo:
                            lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
                            upper_layer_uom=aixm_feature_dict['upper_layer_uom'],
                            uom=aixm_feature_dict['lower_layer_uom'], fol=aixm_feature_dict['name'],
-                           altitude_mode=self.altitude_mode(aixm_feature_dict))
-
-    def altitude_mode(self, aixm_dict):
-        altitude_mode = 'absolute'
-        if aixm_dict['upper_layer_reference'] == 'SFC':
-            altitude_mode = 'relativetoground'
-        return altitude_mode
+                           altitude_mode=util.altitude_mode(aixm_feature_dict))
 
     def draw_cylinder(self, aixm_feature_dict, kml_obj):
         aixm_feature_dict = util.convert_elevation(aixm_feature_dict)
@@ -68,4 +62,10 @@ class AixmGeo:
                          upper_layer=float(upper_layer), uom=uom,
                          fol=aixm_feature_dict['name'], lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
                          upper_layer_uom=aixm_feature_dict['upper_layer_uom'],
-                         altitude_mode=self.altitude_mode(aixm_feature_dict))
+                         altitude_mode=util.altitude_mode(aixm_feature_dict))
+
+
+if __name__ == '__main__':
+    file_loc = Path().absolute().joinpath('..', Path('test_data/donlon.xml'))
+    output = Path().absolute()
+    AixmGeo(file_loc, output, 'test_kml.kml').build_kml()

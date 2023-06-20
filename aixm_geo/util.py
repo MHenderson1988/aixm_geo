@@ -62,9 +62,16 @@ def convert_elevation(aixm_feature_dict):
 
     if aixm_feature_dict['upper_layer'] == 'UNL':
         aixm_feature_dict['upper_layer_uom'] = 'M'
-        aixm_feature_dict['upper_layer'] = 18288.00 # 60,000 ft in metres
+        aixm_feature_dict['upper_layer'] = 18288.00  # 60,000 ft in metres
 
     return aixm_feature_dict
+
+
+def altitude_mode(aixm_dict):
+    altitude_mode = 'absolute'
+    if aixm_dict['upper_layer_reference'] == 'SFC':
+        altitude_mode = 'relativetoground'
+    return altitude_mode
 
 
 def switch_radius_uom(radius_uom):
