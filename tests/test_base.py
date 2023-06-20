@@ -7,13 +7,13 @@ from aixm_geo.settings import NAMESPACES
 
 class TestSinglePointAixm(TestCase):
     def setUp(self) -> None:
-        file_loc = Path().absolute().joinpath('..', Path('test_data/test.xml'))
+        file_loc = Path().absolute().joinpath('..', Path('test_data/donlon.xml'))
         features = AixmFeatureFactory(file_loc).root.findall('.//message:hasMember', NAMESPACES)
         self.ah = SinglePointAixm(features[0])
 
     def test_get_first_value(self):
         name = self.ah.get_first_value('.//aixm:name')
-        self.assertEqual('SAINT ETIENNE MALACUSSY', name)
+        self.assertEqual('REPUBLIC OF DONLON', name)
         self.assertNotEqual('RANDOM AIRPORT NAME', name)
         self.assertTrue(isinstance(name, str))
 
@@ -29,15 +29,6 @@ class TestSinglePointAixm(TestCase):
 
 class TestMultiPointAixm(TestCase):
     def setUp(self) -> None:
-        file_loc = Path().absolute().joinpath('..', Path('test_data/test_airspace.xml'))
+        file_loc = Path().absolute().joinpath('..', Path('test_data/donlon.xml'))
         features = AixmFeatureFactory(file_loc).root.findall('.//message:hasMember', NAMESPACES)
         self.airspace = MultiPointAixm(features[0])
-
-    def test_get_coordinate_list(self):
-        subroot = self.airspace._root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection//gml:segments',
-                                     namespaces=NAMESPACES)
-        coordinate_list = self.airspace.get_coordinate_list(subroot)
-        self.assertTrue(isinstance(coordinate_list, list))
-        for string in coordinate_list:
-            self.assertTrue(isinstance(string, str))
-

@@ -2,8 +2,8 @@ from pathlib import Path
 
 from kmlplus import kml
 
-import aixm_geo.util as util
-from aixm_geo.factory import AixmFeatureFactory
+import util as util
+from factory import AixmFeatureFactory
 
 
 class AixmGeo:
@@ -30,11 +30,13 @@ class AixmGeo:
                                   point_name=aixm_feature_dict['name'])
                 elif geometry_type == 'polyhedron':
                     self.draw_airspace(aixm_feature_dict, kml_obj)
+                print(aixm_feature_dict)
+
             else:
                 pass
 
     def draw_airspace(self, aixm_feature_dict, kml_obj):
-        aixm_feature_dict = util.convert_fl_to_feet(aixm_feature_dict)
+        aixm_feature_dict = util.convert_elevation(aixm_feature_dict)
 
         kml_obj.polyhedron(aixm_feature_dict["coordinates"],
                            # Convert to FL ie FL 95 x by 100 to get 9500 for correct conversion
@@ -43,9 +45,17 @@ class AixmGeo:
                            lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
                            upper_layer_uom=aixm_feature_dict['upper_layer_uom'],
                            uom=aixm_feature_dict['lower_layer_uom'], fol=aixm_feature_dict['name'],
-                           altitude_mode='absolute')
+                           altitude_mode=self.altitude_mode(aixm_feature_dict))
+
+    def altitude_mode(self, aixm_dict):
+        altitude_mode = 'absolute'
+        if aixm_dict['upper_layer_reference'] == 'SFC':
+            altitude_mode = 'relativetoground'
+        return altitude_mode
 
     def draw_cylinder(self, aixm_feature_dict, kml_obj):
+        aixm_feature_dict = util.convert_elevation(aixm_feature_dict)
+
         coordinates = aixm_feature_dict['coordinates'][0].split(',')[0].strip()
         radius = aixm_feature_dict['coordinates'][0].split(',')[1].split('=')[-1]
         radius_uom = util.switch_radius_uom(aixm_feature_dict['coordinates'][0].split(',')[2].split('=')[-1])
@@ -53,15 +63,9 @@ class AixmGeo:
         upper_layer = aixm_feature_dict['upper_layer']
         uom = aixm_feature_dict['lower_layer_uom']
 
-        aixm_feature_dict = util.convert_fl_to_feet(aixm_feature_dict)
         kml_obj.cylinder(coordinates, float(radius),
                          radius_uom=radius_uom, lower_layer=float(lower_layer),
                          upper_layer=float(upper_layer), uom=uom,
                          fol=aixm_feature_dict['name'], lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
-                         upper_layer_uom=aixm_feature_dict['upper_layer_uom'], altitude_mode='absolute')
-
-
-if __name__ == '__main__':
-    file_loc = Path().absolute().joinpath('..', Path('test_data/test_airspace.xml'))
-    output = Path().absolute()
-    AixmGeo(file_loc, output, 'test_kml.kml').build_kml()
+                         upper_layer_uom=aixm_feature_dict['upper_layer_uom'],
+                         altitude_mode=self.altitude_mode(aixm_feature_dict))

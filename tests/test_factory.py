@@ -6,7 +6,7 @@ from aixm_geo.factory import AixmFeatureFactory
 
 class TestAixmFeatureFactory(TestCase):
     def setUp(self) -> None:
-        file_loc = Path().absolute().joinpath('..', Path('test_data/test.xml'))
+        file_loc = Path().absolute().joinpath('..', Path('test_data/donlon.xml'))
         self.test_factory = AixmFeatureFactory(file_loc)
 
     def test_root(self):

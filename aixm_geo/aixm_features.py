@@ -1,6 +1,6 @@
-from aixm_geo.base import SinglePointAixm, MultiPointAixm
-from aixm_geo.interfaces import IAixmFeature
-from aixm_geo.settings import NAMESPACES
+from base import SinglePointAixm, MultiPointAixm
+from interfaces import IAixmFeature
+from settings import NAMESPACES
 
 
 class AirportHeliport(SinglePointAixm, IAixmFeature):
@@ -111,7 +111,7 @@ class Airspace(MultiPointAixm, IAixmFeature):
         Returns:
             geo_dict(dict): A dictionary containing relevant information regarding the feature.
         """
-        subroot = self._root.findall('.//aixm:theAirspaceVolume//aixm:horizontalProjection',
+        subroot = self._root.findall('.//aixm:AirspaceGeometryComponent',
                                      namespaces=NAMESPACES)
 
         coordinate_list = self.get_coordinate_list(subroot)
@@ -124,8 +124,9 @@ class Airspace(MultiPointAixm, IAixmFeature):
             'upper_layer_uom': upper_layer_uom,
             'lower_layer': lower_layer,
             'lower_layer_uom': lower_layer_uom,
-            'name': f"{self.get_first_value('.//aixm:designator')} {self.get_first_value('.//aixm:name')}",
+            'name': f"{self.get_first_value('.//aixm:designator')} ({self.get_first_value('.//aixm:name')})",
             'coordinates': coordinate_list,
+            'upper_layer_reference': self.get_first_value('.//aixm:upperLimitReference'),
         }
 
         return geo_dict

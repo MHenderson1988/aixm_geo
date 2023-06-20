@@ -2,7 +2,7 @@ from datetime import datetime
 
 from lxml.etree import _Element
 
-from aixm_geo.settings import NAMESPACES
+from settings import NAMESPACES
 
 
 def get_feature_type(timeslices: list) -> str:
@@ -47,14 +47,22 @@ def parse_timeslice(subroot: _Element) -> list:
     return timeslices
 
 
-def convert_fl_to_feet(aixm_feature_dict):
+def convert_elevation(aixm_feature_dict):
     if aixm_feature_dict['lower_layer_uom'] == 'FL':
         aixm_feature_dict['lower_layer_uom'] = 'FT'
         aixm_feature_dict['lower_layer'] = float(aixm_feature_dict['lower_layer']) * 100
 
+    if aixm_feature_dict['lower_layer'] == 'GND':
+        aixm_feature_dict['lower_layer_uom'] = 'M'
+        aixm_feature_dict['lower_layer'] = 0.0
+
     if aixm_feature_dict['upper_layer_uom'] == 'FL':
         aixm_feature_dict['upper_layer_uom'] = 'FT'
         aixm_feature_dict['upper_layer'] = float(aixm_feature_dict['upper_layer']) * 100
+
+    if aixm_feature_dict['upper_layer'] == 'UNL':
+        aixm_feature_dict['upper_layer_uom'] = 'M'
+        aixm_feature_dict['upper_layer'] = 18288.00 # 60,000 ft in metres
 
     return aixm_feature_dict
 

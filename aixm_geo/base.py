@@ -3,8 +3,8 @@ from typing import Union
 from lxml import etree
 from pyproj import Geod
 
-import aixm_geo.util as util
-from aixm_geo.settings import NAMESPACES
+import util as util
+from settings import NAMESPACES
 
 
 class SinglePointAixm:
@@ -110,8 +110,9 @@ class SinglePointAixm:
             crs(str): A string of 'Anticlockwise' or 'Clockwise' depending upon the CRS
             applied and the start and end angles
         """
-        crs = self.get_first_value_attribute('.//aixm:Surface', attribute_string='srsName')
-        split = crs.split(':')[-1]
+        crs = self._timeslice[-1].xpath(".//aixm:AirspaceGeometryComponent//*[@srsName]", namespaces=NAMESPACES)[0]
+
+        split = crs.get("srsName").split(':')[-1]
         if split == '4326':
             crs = '4326'
         elif split == 'CRS84':
@@ -140,7 +141,7 @@ class MultiPointAixm(SinglePointAixm):
         unpacked_gml = None
         for location in subroot:
             try:
-                unpacked_gml = self.unpack_gml(location.iterdescendants())
+                unpacked_gml = self.unpack_gml(location)
             except TypeError:
                 print('Coordinates can only be extracted from an LXML etree._Element object.')
         return unpacked_gml
@@ -154,11 +155,8 @@ class MultiPointAixm(SinglePointAixm):
             coordinate_string(str): A coordinate string
         """
         coordinate_list = []
-        for child in location:
-            tag = child.tag.split('}')[-1]
-            if tag == 'Ring' or tag == 'LineStringSegment':
-                for x in self.extract_pos_and_poslist(child):
-                    coordinate_list.append(x)
+        for x in self.extract_pos_and_poslist(location):
+            coordinate_list.append(x)
         return coordinate_list
 
     def extract_pos_and_poslist(self, location):
@@ -189,12 +187,10 @@ class MultiPointAixm(SinglePointAixm):
 
     def unpack_pos_list(self, string_to_manipulate):
         split = string_to_manipulate.split(' ')
-        coordinate_list = []
-        if len(split) > 2:
-            coordinate_list.append(f'{split[0]} {split[1]}')
-            for i in range(len(split)):
-                if i < len(split) and i % 2 == 0 and i != 0:
-                    new_string = f'{split[i]} {split[i + 1]}'
+        if len(split) > 1:
+            for i in range(len(split)-1):
+                if i < len(split) and i % 2 == 0:
+                    new_string = f'{split[i]} {split[i+1]}'
                     yield new_string
         else:
             yield string_to_manipulate
@@ -214,7 +210,7 @@ class MultiPointAixm(SinglePointAixm):
         radius = self.get_first_value('.//gml:radius', subtree=location)
         radius_uom = self.get_first_value_attribute('.//gml:radius', subtree=location, attribute_string='uom')
 
-        conversion_dict = {'ft': 0.3048, '[nmi_i]': 1852, 'mi': 1609.4, 'km': 1000}
+        conversion_dict = {'ft': 0.3048, 'NM': 1852, '[nmi_i]': 1852, 'mi': 1609.4, 'km': 1000}
 
         if radius_uom != 'm':
             radius = float(radius) * conversion_dict[radius_uom]
