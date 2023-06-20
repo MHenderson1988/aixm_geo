@@ -1,3 +1,5 @@
+Project status - Current work in progress at Alpha stage.
+
 # AIXMGeo
 
 AIXMGeo is an AIXM wrapper for [KMLPlus](https://github.com/MHenderson1988/kmlplus) which supports the creation of a curved and 'floating' objects in KML.
