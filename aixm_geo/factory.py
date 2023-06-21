@@ -39,6 +39,11 @@ class AixmFeatureFactory:
         self._errors.append(value)
 
     def get_feature_details(self):
+        """
+        Iterates through the root of the AIXM file and returns a generator of AIXMFeature objects
+        Returns:
+
+        """
         aixm_features = self._root.iterfind('.//message:hasMember', NAMESPACES)
         for feature in aixm_features:
             aixm_feature = self.produce(feature)
@@ -48,6 +53,14 @@ class AixmFeatureFactory:
                 pass
 
     def produce(self, subroot):
+        """
+        Produces an individual AIXMFeature object from the subroot
+        Args:
+            subroot:
+
+        Returns:
+
+        """
         feature_type = util.get_feature_type(subroot)
         try:
             aixm_feature = self._feature_classes[feature_type](subroot)

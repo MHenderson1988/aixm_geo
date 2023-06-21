@@ -89,7 +89,7 @@ class SinglePointAixm:
             crs(str): A string of 'Anticlockwise' or 'Clockwise' depending upon the CRS
             applied and the start and end angles
         """
-        crs = self._timeslice[-1].xpath(".//aixm:AirspaceGeometryComponent//*[@srsName]", namespaces=NAMESPACES)[0]
+        crs = self._timeslice[-1].xpath(".//*[@srsName]", namespaces=NAMESPACES)[0]
 
         split = crs.get("srsName").split(':')[-1]
         if split == '4326':
@@ -117,6 +117,15 @@ class MultiPointAixm(SinglePointAixm):
         super().__init__(root)
 
     def get_coordinate_list(self, subroot):
+        """
+        Parses the LXML etree._Element object and returns a list of coordinate strings.
+        Args:
+            subroot: LXML etree._Element object
+
+        Returns:
+            unpacked_gml(list[str]): A list of coordinate strings
+
+        """
         unpacked_gml = None
         for location in subroot:
             try:
@@ -182,7 +191,7 @@ class MultiPointAixm(SinglePointAixm):
         Returns:
             coordinate_string(str): A coordinate string
         """
-        centre = self.get_centre(location).strip()
+        centre = self.get_arc_centre_point(location).strip()
         start_angle = self.get_first_value('.//gml:startAngle', subtree=location)
         end_angle = self.get_first_value('.//gml:endAngle', subtree=location)
         # Pyproj uses metres, we will have to convert for distance
@@ -206,7 +215,16 @@ class MultiPointAixm(SinglePointAixm):
 
         return coordinate_string
 
-    def get_centre(self, location):
+    def get_arc_centre_point(self, location):
+        centre = self.get_first_value('.//gml:pos', subtree=location)
+
+        # If none, check for gml:posList instead
+        if centre == 'Unknown':
+            centre = self.get_first_value('.//gml:posList', subtree=location)
+
+        return centre
+
+    def get_circle_centre_point(self, location):
         centre = self.get_first_value('.//gml:pos', subtree=location)
 
         # If none, check for gml:posList instead
@@ -261,7 +279,7 @@ class MultiPointAixm(SinglePointAixm):
             Returns:
                 coordinate_string(str): A coordinate string
         """
-        centre = self.get_centre(location)
+        centre = self.get_circle_centre_point(location)
         radius = self.get_first_value('.//gml:radius', subtree=location)
         radius_uom = self.get_first_value_attribute('.//gml:radius', subtree=location, attribute_string='uom')
 
