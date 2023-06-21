@@ -41,28 +41,6 @@ class SinglePointAixm:
             value = "Unknown"
         return value
 
-    # XPath with namespace example = self.root.xpath('//aixm:name', namespaces=self.namespace)
-    # Uses findall as opposed to find
-    def get_all_values(self, xpath: str, **kwargs: etree.Element):
-        """Returns a list of all values within the subtree which match the Xpath provided
-        Args:
-            xpath (str): Valid Xpath string for the tag to try and find.
-            **kwargs:
-                subtree(etree.Element): The subtree to search.  Defaults to self.root if no value provided.
-        Returns:
-            values(list): List of string values found.
-        """
-        subtree = kwargs.pop('subtree', self._root)
-        try:
-            values = subtree.findall(xpath, namespaces=NAMESPACES)
-            if values is None:
-                raise AttributeError
-            else:
-                values = [x.text for x in values]
-        except AttributeError:
-            values = "Unknown"
-        return values
-
     def get_first_value_attribute(self, xpath: str, **kwargs: Union[etree.Element, str]) -> Union[str, dict]:
         """
         Args:
@@ -104,13 +82,14 @@ class SinglePointAixm:
 
     def get_crs(self):
         """
+        Parses the CRS from the AirspaceGeometryComponent parent tag and returns the CRS as a string.
         Args:
             self
         Returns:
             crs(str): A string of 'Anticlockwise' or 'Clockwise' depending upon the CRS
             applied and the start and end angles
         """
-        crs = self._timeslice[-1].xpath(".//aixm:AirspaceGeometryComponent//*[@srsName]", namespaces=NAMESPACES)[0]
+        crs = self._timeslice[-1].xpath(".//*[@srsName]", namespaces=NAMESPACES)[0]
 
         split = crs.get("srsName").split(':')[-1]
         if split == '4326':
@@ -138,6 +117,15 @@ class MultiPointAixm(SinglePointAixm):
         super().__init__(root)
 
     def get_coordinate_list(self, subroot):
+        """
+        Parses the LXML etree._Element object and returns a list of coordinate strings.
+        Args:
+            subroot: LXML etree._Element object
+
+        Returns:
+            unpacked_gml(list[str]): A list of coordinate strings
+
+        """
         unpacked_gml = None
         for location in subroot:
             try:
@@ -188,9 +176,9 @@ class MultiPointAixm(SinglePointAixm):
     def unpack_pos_list(self, string_to_manipulate):
         split = string_to_manipulate.split(' ')
         if len(split) > 1:
-            for i in range(len(split)-1):
+            for i in range(len(split) - 1):
                 if i < len(split) and i % 2 == 0:
-                    new_string = f'{split[i]} {split[i+1]}'
+                    new_string = f'{split[i]} {split[i + 1]}'
                     yield new_string
         else:
             yield string_to_manipulate
@@ -203,7 +191,7 @@ class MultiPointAixm(SinglePointAixm):
         Returns:
             coordinate_string(str): A coordinate string
         """
-        centre = self.get_centre(location).strip()
+        centre = self.get_arc_centre_point(location).strip()
         start_angle = self.get_first_value('.//gml:startAngle', subtree=location)
         end_angle = self.get_first_value('.//gml:endAngle', subtree=location)
         # Pyproj uses metres, we will have to convert for distance
@@ -227,7 +215,16 @@ class MultiPointAixm(SinglePointAixm):
 
         return coordinate_string
 
-    def get_centre(self, location):
+    def get_arc_centre_point(self, location):
+        centre = self.get_first_value('.//gml:pos', subtree=location)
+
+        # If none, check for gml:posList instead
+        if centre == 'Unknown':
+            centre = self.get_first_value('.//gml:posList', subtree=location)
+
+        return centre
+
+    def get_circle_centre_point(self, location):
         centre = self.get_first_value('.//gml:pos', subtree=location)
 
         # If none, check for gml:posList instead
@@ -282,7 +279,7 @@ class MultiPointAixm(SinglePointAixm):
             Returns:
                 coordinate_string(str): A coordinate string
         """
-        centre = self.get_centre(location)
+        centre = self.get_circle_centre_point(location)
         radius = self.get_first_value('.//gml:radius', subtree=location)
         radius_uom = self.get_first_value_attribute('.//gml:radius', subtree=location, attribute_string='uom')
 
