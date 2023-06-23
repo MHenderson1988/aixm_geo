@@ -31742,7 +31742,6 @@ LIGHTED.
 						<aixm:VerticalStructurePart gml:id="ID_375">
 							<aixm:annotation>
 								<aixm:Note gml:id="ID_379">
-									<!-- <aixm:propertyName>horizontalProjection_location</aixm:propertyName> (This is invalid in AIXM 5.1, because of an error in the pattern of the propertyName attribute. It will be corrected in AIXM 5.1.1 and later)-->
 									<aixm:purpose>REMARK</aixm:purpose>
 									<aixm:translatedNote>
 										<aixm:LinguisticNote gml:id="ID_380">

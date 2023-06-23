@@ -26,8 +26,11 @@ class AixmGeo:
                 if geometry_type == 'cylinder':
                     self.draw_cylinder(aixm_feature_dict, kml_obj)
                 elif geometry_type == 'point':
-                    kml_obj.point(aixm_feature_dict["coordinates"], fol=aixm_feature_dict['name'],
-                                  point_name=aixm_feature_dict['name'])
+                    if aixm_feature_dict['type'] == 'VerticalStructure':
+                        self.draw_vertical_structure_point(aixm_feature_dict, kml_obj)
+                    else:
+                        kml_obj.point(aixm_feature_dict["coordinates"], fol=aixm_feature_dict['name'],
+                                      point_name=aixm_feature_dict['name'])
                 elif geometry_type == 'polyhedron':
                     self.draw_airspace(aixm_feature_dict, kml_obj)
                 print(aixm_feature_dict)
@@ -35,31 +38,30 @@ class AixmGeo:
             else:
                 pass
 
-    def draw_airspace(self, aixm_feature_dict, kml_obj):
-        aixm_feature_dict = util.convert_elevation(aixm_feature_dict)
+    def draw_vertical_structure_point(self, aixm_feature_dict, kml_obj):
+        kml_obj.point(aixm_feature_dict["coordinates"], uom=aixm_feature_dict['elevation_uom'],
+                      fol=aixm_feature_dict['name'], point_name=aixm_feature_dict['name'],
+                      altitude_mode='relativeToGround', extrude=1)
 
+    def draw_airspace(self, aixm_feature_dict, kml_obj):
         kml_obj.polyhedron(aixm_feature_dict["coordinates"],
-                           # Convert to FL ie FL 95 x by 100 to get 9500 for correct conversion
+                           aixm_feature_dict["coordinates"],
                            upper_layer=float(aixm_feature_dict['upper_layer']),
                            lower_layer=float(aixm_feature_dict['lower_layer']),
-                           lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
-                           upper_layer_uom=aixm_feature_dict['upper_layer_uom'],
                            uom=aixm_feature_dict['lower_layer_uom'], fol=aixm_feature_dict['name'],
                            altitude_mode=util.altitude_mode(aixm_feature_dict))
 
     def draw_cylinder(self, aixm_feature_dict, kml_obj):
-        aixm_feature_dict = util.convert_elevation(aixm_feature_dict)
 
         coordinates = aixm_feature_dict['coordinates'][0].split(',')[0].strip()
         radius = aixm_feature_dict['coordinates'][0].split(',')[1].split('=')[-1]
         radius_uom = util.switch_radius_uom(aixm_feature_dict['coordinates'][0].split(',')[2].split('=')[-1])
         lower_layer = aixm_feature_dict['lower_layer']
         upper_layer = aixm_feature_dict['upper_layer']
-        uom = aixm_feature_dict['lower_layer_uom']
 
         kml_obj.cylinder(coordinates, float(radius),
                          radius_uom=radius_uom, lower_layer=float(lower_layer),
-                         upper_layer=float(upper_layer), uom=uom,
+                         upper_layer=float(upper_layer),
                          fol=aixm_feature_dict['name'], lower_layer_uom=aixm_feature_dict['lower_layer_uom'],
                          upper_layer_uom=aixm_feature_dict['upper_layer_uom'],
                          altitude_mode=util.altitude_mode(aixm_feature_dict))

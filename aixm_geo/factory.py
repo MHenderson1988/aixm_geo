@@ -15,7 +15,8 @@ class AixmFeatureFactory:
             'DesignatedPoint': af.DesignatedPoint,
             'NavaidComponent': af.NavaidComponent,
             'RouteSegment': af.RouteSegment,
-            'Airspace': af.Airspace
+            'Airspace': af.Airspace,
+            'VerticalStructure': af.VerticalStructure,
         }
         self._errors = []
 

@@ -70,13 +70,23 @@ class SinglePointAixm:
 
         return attribute
 
-    def get_elevation(self):
+    def get_field_elevation(self):
         elevation = self.get_first_value('.//aixm:fieldElevation')
         elevation_uom = self.get_first_value_attribute('.//aixm:fieldElevation', attribute_string='uom')
 
         if elevation == 'Unknown':
             elevation = 0
-            elevation_uom = 'FT'
+            elevation_uom = 'M'
+
+        return elevation, elevation_uom
+
+    def get_vertical_extent(self):
+        elevation = self.get_first_value('.//aixm:elevation')
+        elevation_uom = self.get_first_value_attribute('.//aixm:elevation', attribute_string='uom')
+
+        if elevation == 'Unknown':
+            elevation = 0
+            elevation_uom = 'M'
 
         return elevation, elevation_uom
 
@@ -116,6 +126,23 @@ class MultiPointAixm(SinglePointAixm):
     def __init__(self, root):
         super().__init__(root)
 
+    def get_airspace_elevation(self):
+        lower_layer = self.get_first_value('.//aixm:theAirspaceVolume//aixm:lowerLimit')
+        lower_layer_uom = self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:lowerLimit',
+                                                         attribute_string='uom')
+        upper_layer = self.get_first_value('.//aixm:theAirspaceVolume//aixm:upperLimit')
+        upper_layer_uom = self.get_first_value_attribute('.//aixm:theAirspaceVolume//aixm:upperLimit',
+                                                         attribute_string='uom')
+
+        if lower_layer == 'Unknown':
+            lower_layer = 0.0
+            lower_layer_uom = 'M'
+        if upper_layer == 'Unknown':
+            upper_layer = 0.0
+            upper_layer_uom = 'M'
+
+        return lower_layer, lower_layer_uom, upper_layer, upper_layer_uom
+
     def get_coordinate_list(self, subroot):
         """
         Parses the LXML etree._Element object and returns a list of coordinate strings.
@@ -132,6 +159,10 @@ class MultiPointAixm(SinglePointAixm):
                 unpacked_gml = self.unpack_gml(location)
             except TypeError:
                 print('Coordinates can only be extracted from an LXML etree._Element object.')
+
+        for x in unpacked_gml:
+            x.strip("r'\'")
+
         return unpacked_gml
 
     def unpack_gml(self, location: etree.Element) -> list[str]:
@@ -156,7 +187,7 @@ class MultiPointAixm(SinglePointAixm):
         """
         for child in location.iterdescendants():
             tag = child.tag.split('}')[-1]
-            if tag == 'GeodesicString':
+            if tag == 'GeodesicString' or tag == 'ElevatedPoint':
                 for x in self.unpack_geodesic_string(child):
                     yield x
             elif tag == 'CircleByCenterPoint':
