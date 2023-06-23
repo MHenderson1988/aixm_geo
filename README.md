@@ -17,6 +17,7 @@ AIXMGeo is currently only tested with AIXM 5.1 however it should also work with 
 * RouteSegment
 * AirportHeliport (ARP)
 * DesignatedPoint
+* VerticalStructure
 
 ## Installation
 
