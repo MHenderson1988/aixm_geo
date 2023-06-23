@@ -1,4 +1,4 @@
 lxml~=4.9.2
 pyproj~=3.5.0
-KMLPlus~=3.0.0b3
+KMLPlus~=3.0.0b6
 setuptools~=57.0.0
