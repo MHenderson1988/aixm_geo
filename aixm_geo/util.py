@@ -47,24 +47,20 @@ def parse_timeslice(subroot: _Element) -> list:
     return timeslices
 
 
-def convert_elevation(aixm_feature_dict):
-    if aixm_feature_dict['lower_layer_uom'] == 'FL':
-        aixm_feature_dict['lower_layer_uom'] = 'FT'
-        aixm_feature_dict['lower_layer'] = float(aixm_feature_dict['lower_layer']) * 100
+def convert_elevation(z_value: str, current_uom: str) -> float:
+    if z_value == 'GND':
+        current_uom = 'M'
+        z_value = 0.0
 
-    if aixm_feature_dict['lower_layer'] == 'GND':
-        aixm_feature_dict['lower_layer_uom'] = 'M'
-        aixm_feature_dict['lower_layer'] = 0.0
+    if z_value == 'UNL':
+        current_uom = 'M'
+        z_value = 18288.00  # 60,000 ft in metres
 
-    if aixm_feature_dict['upper_layer_uom'] == 'FL':
-        aixm_feature_dict['upper_layer_uom'] = 'FT'
-        aixm_feature_dict['upper_layer'] = float(aixm_feature_dict['upper_layer']) * 100
+    if current_uom == 'FL':
+        current_uom = 'M'
+        z_value = (float(z_value) * 100) * .3048  # 1 ft in metres
 
-    if aixm_feature_dict['upper_layer'] == 'UNL':
-        aixm_feature_dict['upper_layer_uom'] = 'M'
-        aixm_feature_dict['upper_layer'] = 18288.00  # 60,000 ft in metres
-
-    return aixm_feature_dict
+    return z_value, current_uom
 
 
 def altitude_mode(aixm_dict):
@@ -85,6 +81,13 @@ def determine_geometry_type(aixm_feature_dict):
     if aixm_feature_dict['type'] == 'RouteSegment':
         geometry_type = 'LineString'
 
+    elif aixm_feature_dict['type'] == 'VerticalStructure':
+        if len(aixm_feature_dict['coordinates']) > 1:
+            aixm_feature_dict['lower_layer'] = 0.0
+            aixm_feature_dict['upper_layer'] = aixm_feature_dict['elevation']
+            geometry_type = 'Polygon'
+        else:
+            geometry_type = 'point'
     elif len(aixm_feature_dict["coordinates"]) == 1:
         if 'radius=' in aixm_feature_dict['coordinates'][0]:
             if aixm_feature_dict["upper_layer"]:

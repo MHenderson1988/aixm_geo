@@ -29,9 +29,9 @@ class TestSinglePointAixm(TestCase):
         self.assertEqual('unknown', attribute['indeterminatePosition'])
 
     def test_get_elevation(self):
-        elevation = self.ah.get_elevation()
-        self.assertEqual(elevation, (0.0, 'FT'))
-        self.assertNotEqual(elevation, (0.0, 'M'))
+        elevation = self.ah.get_field_elevation()
+        self.assertEqual(elevation, (0.0, 'M'))
+        self.assertNotEqual(elevation, (0.0, 'FT'))
         self.assertTrue(isinstance(elevation, tuple))
 
 
