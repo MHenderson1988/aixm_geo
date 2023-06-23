@@ -18,9 +18,19 @@ AIXMGeo is currently only tested with AIXM 5.1 however it should also work with 
 * AirportHeliport (ARP)
 * DesignatedPoint
 
+## Installation
+
+```
+pip install aixm_geo==0.0.2
+```
+
 ## Use
 
 ```
 AixmGeo(aixm_file_path, kml_output_path, kml_file_name).build_kml()
 ```
+
+## Disclaimer
+
+Not for real world navigation use.
 
